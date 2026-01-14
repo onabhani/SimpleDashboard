@@ -46,5 +46,13 @@ class RestController {
         // Flow Tasks endpoint
         $tasks = new Endpoints\FlowTasks();
         $tasks->register(self::NAMESPACE);
+
+        // Sales Overview endpoint
+        $sales = new Endpoints\SalesOverview();
+        $sales->register(self::NAMESPACE);
+
+        // Reports Overview endpoint
+        $reports = new Endpoints\ReportsOverview();
+        $reports->register(self::NAMESPACE);
     }
 }

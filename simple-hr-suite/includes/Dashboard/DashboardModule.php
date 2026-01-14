@@ -38,5 +38,7 @@ class DashboardModule {
         require_once SFS_HR_PLUGIN_DIR . 'includes/Dashboard/Endpoints/MyHrStatus.php';
         require_once SFS_HR_PLUGIN_DIR . 'includes/Dashboard/Endpoints/HrRequests.php';
         require_once SFS_HR_PLUGIN_DIR . 'includes/Dashboard/Endpoints/FlowTasks.php';
+        require_once SFS_HR_PLUGIN_DIR . 'includes/Dashboard/Endpoints/SalesOverview.php';
+        require_once SFS_HR_PLUGIN_DIR . 'includes/Dashboard/Endpoints/ReportsOverview.php';
     }
 }

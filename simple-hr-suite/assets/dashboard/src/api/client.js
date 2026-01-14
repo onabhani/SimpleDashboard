@@ -108,4 +108,17 @@ export const api = {
      * Get flow tasks
      */
     getFlowTasks: () => apiFetch('me/flow-tasks'),
+
+    /**
+     * Get sales data
+     * @param {Object} params
+     * @param {string} params.range - Date range
+     */
+    getSalesData: (params = {}) => apiFetch('sales/overview', params),
+
+    /**
+     * Get reports data
+     * @param {Object} params
+     */
+    getReportsData: (params = {}) => apiFetch('reports/overview', params),
 };
