@@ -3,8 +3,9 @@ import { createRoot } from 'react-dom/client';
 import App from './App';
 import './styles/index.css';
 
-// Mount the React app
-const container = document.getElementById('sfs-hr-dashboard-root');
+// Mount the React app - support both new and legacy root element IDs
+const container = document.getElementById('dofs-dashboard-root')
+    || document.getElementById('sfs-hr-dashboard-root');
 
 if (container) {
     const root = createRoot(container);

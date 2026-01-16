@@ -2,7 +2,7 @@
 /**
  * Dashboard Shortcode Handler
  *
- * Handles [sfs_hr_dashboard] shortcode rendering and asset enqueuing.
+ * Handles [dofs_dashboard] shortcode rendering and asset enqueuing.
  */
 
 namespace SFS_HR\Dashboard;
@@ -15,6 +15,9 @@ class Shortcode {
      * Initialize shortcode
      */
     public function init(): void {
+        // New shortcode
+        add_shortcode('dofs_dashboard', [$this, 'render']);
+        // Legacy shortcode for backwards compatibility
         add_shortcode('sfs_hr_dashboard', [$this, 'render']);
     }
 
@@ -31,8 +34,8 @@ class Shortcode {
             exit;
         }
 
-        // Check capability
-        if (!current_user_can('sfs_hr.view_dashboard_manager')) {
+        // Check capability (support both new and legacy)
+        if (!current_user_can('dofs.view_dashboard') && !current_user_can('sfs_hr.view_dashboard_manager')) {
             return $this->render_no_access();
         }
 
@@ -40,7 +43,7 @@ class Shortcode {
         $this->enqueue_assets();
 
         // Output root element
-        return '<div id="sfs-hr-dashboard-root" class="sfs-dashboard"></div>';
+        return '<div id="dofs-dashboard-root" class="dofs-dashboard"></div>';
     }
 
     /**
@@ -49,9 +52,9 @@ class Shortcode {
      * @return string HTML output
      */
     private function render_no_access(): string {
-        return '<div class="sfs-dashboard-no-access" style="padding: 40px; text-align: center;">
-            <h2>' . esc_html__('Access Denied', 'simple-hr-suite') . '</h2>
-            <p>' . esc_html__('You do not have permission to access the manager dashboard.', 'simple-hr-suite') . '</p>
+        return '<div class="dofs-dashboard-no-access" style="padding: 40px; text-align: center;">
+            <h2>' . esc_html__('Access Denied', 'dofs-dashboard') . '</h2>
+            <p>' . esc_html__('You do not have permission to access the dashboard.', 'dofs-dashboard') . '</p>
         </div>';
     }
 
@@ -60,23 +63,23 @@ class Shortcode {
      */
     private function enqueue_assets(): void {
         $user = wp_get_current_user();
-        $build_url = SFS_HR_PLUGIN_URL . 'assets/dashboard/build/';
-        $build_path = SFS_HR_PLUGIN_DIR . 'assets/dashboard/build/';
+        $build_url = DOFS_PLUGIN_URL . 'assets/dashboard/build/';
+        $build_path = DOFS_PLUGIN_DIR . 'assets/dashboard/build/';
 
         // Enqueue styles
         wp_enqueue_style(
-            'sfs-hr-dashboard',
+            'dofs-dashboard',
             $build_url . 'dashboard.css',
             [],
-            file_exists($build_path . 'dashboard.css') ? filemtime($build_path . 'dashboard.css') : SFS_HR_VERSION
+            file_exists($build_path . 'dashboard.css') ? filemtime($build_path . 'dashboard.css') : DOFS_VERSION
         );
 
         // Enqueue scripts
         wp_enqueue_script(
-            'sfs-hr-dashboard',
+            'dofs-dashboard',
             $build_url . 'dashboard.js',
             [],
-            file_exists($build_path . 'dashboard.js') ? filemtime($build_path . 'dashboard.js') : SFS_HR_VERSION,
+            file_exists($build_path . 'dashboard.js') ? filemtime($build_path . 'dashboard.js') : DOFS_VERSION,
             true
         );
 
@@ -84,11 +87,11 @@ class Shortcode {
         $avatar_url = $this->get_user_avatar($user->ID);
 
         // Get menu items for topbar and sidebar
-        $topbar_menu = $this->get_menu_items('sfs_dashboard_top');
+        $topbar_menu = $this->get_topbar_menu();
         $sidebar_menu = $this->get_sidebar_menu();
 
         // Localize script with boot data
-        wp_localize_script('sfs-hr-dashboard', 'SFS_HR_DASHBOARD_BOOT', [
+        wp_localize_script('dofs-dashboard', 'SFS_HR_DASHBOARD_BOOT', [
             'rest_url' => rest_url('sfs-hr/v1/dashboard/'),
             'nonce' => wp_create_nonce('wp_rest'),
             'user' => [
@@ -96,7 +99,7 @@ class Shortcode {
                 'name' => $user->display_name,
                 'avatar' => $avatar_url,
                 'roles' => $user->roles,
-                'is_manager' => current_user_can('sfs_hr.view_dashboard_manager'),
+                'is_manager' => current_user_can('dofs.view_dashboard') || current_user_can('sfs_hr.view_dashboard_manager'),
             ],
             'menu_items' => $topbar_menu,
             'sidebar_menu' => $sidebar_menu,
@@ -111,7 +114,10 @@ class Shortcode {
      */
     private function get_user_avatar(int $user_id): string {
         // Try to get employee photo if available (hook for HR system integration)
-        $employee_photo = apply_filters('sfs_hr_employee_photo', null, $user_id);
+        $employee_photo = apply_filters('dofs_employee_photo', null, $user_id);
+        if (!$employee_photo) {
+            $employee_photo = apply_filters('sfs_hr_employee_photo', null, $user_id);
+        }
 
         if ($employee_photo) {
             return $employee_photo;
@@ -119,6 +125,29 @@ class Shortcode {
 
         // Fallback to WordPress avatar
         return get_avatar_url($user_id, ['size' => 96]);
+    }
+
+    /**
+     * Get topbar menu items
+     *
+     * @return array Menu items
+     */
+    private function get_topbar_menu(): array {
+        $locations = get_nav_menu_locations();
+
+        // Try new location first, then legacy
+        $location = null;
+        if (isset($locations['dofs_dashboard_top'])) {
+            $location = 'dofs_dashboard_top';
+        } elseif (isset($locations['sfs_dashboard_top'])) {
+            $location = 'sfs_dashboard_top';
+        }
+
+        if (!$location) {
+            return [];
+        }
+
+        return $this->get_menu_items($location);
     }
 
     /**
@@ -163,13 +192,19 @@ class Shortcode {
     private function get_sidebar_menu(): array {
         $locations = get_nav_menu_locations();
 
-        // Check if sidebar menu is configured
-        if (!isset($locations['sfs_dashboard_sidebar'])) {
-            // Return default menu if no WP menu is set
+        // Try new location first, then legacy
+        $menu_location = null;
+        if (isset($locations['dofs_dashboard_sidebar'])) {
+            $menu_location = 'dofs_dashboard_sidebar';
+        } elseif (isset($locations['sfs_dashboard_sidebar'])) {
+            $menu_location = 'sfs_dashboard_sidebar';
+        }
+
+        if (!$menu_location) {
             return $this->get_default_sidebar_menu();
         }
 
-        $menu = wp_get_nav_menu_object($locations['sfs_dashboard_sidebar']);
+        $menu = wp_get_nav_menu_object($locations[$menu_location]);
 
         if (!$menu) {
             return $this->get_default_sidebar_menu();
