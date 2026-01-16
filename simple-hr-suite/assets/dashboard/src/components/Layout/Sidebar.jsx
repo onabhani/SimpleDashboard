@@ -1,63 +1,39 @@
 import React from 'react';
+import { getBootData } from '../../api/client';
+
+/**
+ * Icon mapping for menu items
+ * Maps icon names from WordPress menu CSS classes to React components
+ */
+const iconMap = {
+    home: HomeIcon,
+    grid: GridIcon,
+    chart: ChartIcon,
+    cart: ShoppingCartIcon,
+    users: UserGroupIcon,
+    cube: CubeIcon,
+    archive: ArchiveIcon,
+    team: UsersIcon,
+    user: UserIcon,
+    clipboard: ClipboardIcon,
+    document: DocumentIcon,
+    trending: TrendingIcon,
+    tasks: TasksIcon,
+    settings: SettingsIcon,
+    help: HelpIcon,
+    // Default fallback
+    default: DocumentIcon,
+};
 
 /**
  * Sidebar navigation component
- * Enhanced with Sales, Reports, Inventory, and Settings sections
+ * Uses WordPress menu from boot data, falls back to default menu
  */
 export default function Sidebar({ isOpen, onClose }) {
-    const navItems = [
-        {
-            section: 'MAIN',
-            items: [
-                { label: 'Dashboard', href: '#', icon: HomeIcon, active: true },
-                { label: 'Quick Access', href: '#quick-access', icon: GridIcon },
-            ],
-        },
-        {
-            section: 'SALES & ORDERS',
-            items: [
-                { label: 'Sales Overview', href: '#sales-section', icon: ChartIcon },
-                { label: 'Orders', href: '#orders-section', icon: ShoppingCartIcon },
-                { label: 'Customers', href: '#customers-section', icon: UserGroupIcon },
-            ],
-        },
-        {
-            section: 'INVENTORY',
-            items: [
-                { label: 'Products', href: '#inventory-section', icon: CubeIcon },
-                { label: 'Stock Levels', href: '#stock', icon: ArchiveIcon },
-            ],
-        },
-        {
-            section: 'HR',
-            items: [
-                { label: 'HR Overview', href: '#hr-section', icon: UsersIcon },
-                { label: 'My HR', href: '#my-hr', icon: UserIcon },
-                { label: 'My Team', href: '#team-snapshot', icon: TeamIcon },
-                { label: 'HR Actions', href: '#hr-actions', icon: ClipboardIcon },
-            ],
-        },
-        {
-            section: 'REPORTS & DATA',
-            items: [
-                { label: 'Reports', href: '#reports-section', icon: DocumentIcon },
-                { label: 'Analytics', href: '#analytics', icon: TrendingIcon },
-            ],
-        },
-        {
-            section: 'WORKFLOWS',
-            items: [
-                { label: 'My Tasks', href: '#workflows', icon: TasksIcon },
-            ],
-        },
-        {
-            section: 'SETTINGS',
-            items: [
-                { label: 'Settings', href: '/settings', icon: SettingsIcon },
-                { label: 'Help', href: '/help', icon: HelpIcon },
-            ],
-        },
-    ];
+    const boot = getBootData();
+
+    // Get sidebar menu from WordPress boot data or use default
+    const navItems = boot.sidebar_menu || getDefaultMenu();
 
     return (
         <aside
@@ -92,31 +68,41 @@ export default function Sidebar({ isOpen, onClose }) {
 
                 {/* Navigation */}
                 <nav className="flex-1 px-3 py-4 space-y-6 overflow-y-auto">
-                    {navItems.map((group) => (
-                        <div key={group.section}>
+                    {navItems.map((group, groupIndex) => (
+                        <div key={group.section || groupIndex}>
                             <h3 className="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-400 dark:text-gray-500">
                                 {group.section}
                             </h3>
                             <ul className="space-y-1">
                                 {group.items.map((item) => {
-                                    const Icon = item.icon;
+                                    // Get icon component - support both string icon names and direct components
+                                    const Icon = typeof item.icon === 'string'
+                                        ? (iconMap[item.icon] || iconMap.default)
+                                        : (item.icon || iconMap.default);
+                                    const isActive = item.active || false;
+                                    // Support both 'title' (from WP) and 'label' (from defaults)
+                                    const label = item.title || item.label;
+                                    // Support both 'url' (from WP) and 'href' (from defaults)
+                                    const href = item.url || item.href;
+
                                     return (
-                                        <li key={item.label}>
+                                        <li key={item.id || label}>
                                             <a
-                                                href={item.href}
+                                                href={href}
+                                                target={item.target || '_self'}
                                                 onClick={() => onClose?.()}
                                                 className={`
                                                     flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium
                                                     transition-all duration-150
-                                                    ${item.active
+                                                    ${isActive
                                                         ? 'bg-gradient-to-r from-primary-500/10 to-primary-600/10 text-primary-700 dark:from-primary-500/20 dark:to-primary-600/20 dark:text-primary-400 border-s-2 border-primary-500'
                                                         : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700/50'
                                                     }
                                                 `}
-                                                aria-current={item.active ? 'page' : undefined}
+                                                aria-current={isActive ? 'page' : undefined}
                                             >
-                                                <Icon className={`h-5 w-5 flex-shrink-0 ${item.active ? 'text-primary-600 dark:text-primary-400' : ''}`} />
-                                                {item.label}
+                                                <Icon className={`h-5 w-5 flex-shrink-0 ${isActive ? 'text-primary-600 dark:text-primary-400' : ''}`} />
+                                                {label}
                                                 {item.badge && (
                                                     <span className="ms-auto px-1.5 py-0.5 text-xs font-medium rounded-full bg-primary-100 text-primary-700 dark:bg-primary-900/30 dark:text-primary-400">
                                                         {item.badge}
@@ -152,6 +138,65 @@ export default function Sidebar({ isOpen, onClose }) {
             </div>
         </aside>
     );
+}
+
+/**
+ * Default menu when no WordPress menu is configured
+ */
+function getDefaultMenu() {
+    return [
+        {
+            section: 'MAIN',
+            items: [
+                { id: 1, label: 'Dashboard', href: '#', icon: 'home', active: true },
+                { id: 2, label: 'Quick Access', href: '#quick-access', icon: 'grid' },
+            ],
+        },
+        {
+            section: 'SALES & ORDERS',
+            items: [
+                { id: 3, label: 'Sales Overview', href: '#sales-section', icon: 'chart' },
+                { id: 4, label: 'Orders', href: '#orders-section', icon: 'cart' },
+                { id: 5, label: 'Customers', href: '#customers-section', icon: 'users' },
+            ],
+        },
+        {
+            section: 'INVENTORY',
+            items: [
+                { id: 6, label: 'Products', href: '#inventory-section', icon: 'cube' },
+                { id: 7, label: 'Stock Levels', href: '#stock', icon: 'archive' },
+            ],
+        },
+        {
+            section: 'HR',
+            items: [
+                { id: 8, label: 'HR Overview', href: '#hr-section', icon: 'team' },
+                { id: 9, label: 'My HR', href: '#my-hr', icon: 'user' },
+                { id: 10, label: 'My Team', href: '#team-snapshot', icon: 'users' },
+                { id: 11, label: 'HR Actions', href: '#hr-actions', icon: 'clipboard' },
+            ],
+        },
+        {
+            section: 'REPORTS & DATA',
+            items: [
+                { id: 12, label: 'Reports', href: '#reports-section', icon: 'document' },
+                { id: 13, label: 'Analytics', href: '#analytics', icon: 'trending' },
+            ],
+        },
+        {
+            section: 'WORKFLOWS',
+            items: [
+                { id: 14, label: 'My Tasks', href: '#workflows', icon: 'tasks' },
+            ],
+        },
+        {
+            section: 'SETTINGS',
+            items: [
+                { id: 15, label: 'Settings', href: '/settings', icon: 'settings' },
+                { id: 16, label: 'Help', href: '/help', icon: 'help' },
+            ],
+        },
+    ];
 }
 
 // Icon components
@@ -231,14 +276,6 @@ function UserIcon({ className }) {
     return (
         <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-        </svg>
-    );
-}
-
-function TeamIcon({ className }) {
-    return (
-        <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
         </svg>
     );
 }

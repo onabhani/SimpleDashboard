@@ -59,6 +59,9 @@ register_deactivation_hook(__FILE__, 'sfs_hr_deactivate');
  * Register menu location on init
  */
 function sfs_hr_register_menus() {
-    register_nav_menu('sfs_dashboard_top', __('Dashboard Top Menu', 'simple-hr-suite'));
+    register_nav_menus([
+        'sfs_dashboard_top' => __('Dashboard Top Menu', 'simple-hr-suite'),
+        'sfs_dashboard_sidebar' => __('Dashboard Sidebar Menu', 'simple-hr-suite'),
+    ]);
 }
 add_action('after_setup_theme', 'sfs_hr_register_menus');
