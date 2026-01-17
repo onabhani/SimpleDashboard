@@ -63,15 +63,15 @@ class Shortcode {
      */
     private function enqueue_assets(): void {
         $user = wp_get_current_user();
-        $build_url = DOFS_PLUGIN_URL . 'assets/dashboard/build/';
-        $build_path = DOFS_PLUGIN_DIR . 'assets/dashboard/build/';
+        $build_url = DOFS_THEME_URI . '/assets/dashboard/build/';
+        $build_path = DOFS_THEME_DIR . '/assets/dashboard/build/';
 
         // Enqueue styles
         wp_enqueue_style(
             'dofs-dashboard',
             $build_url . 'dashboard.css',
             [],
-            file_exists($build_path . 'dashboard.css') ? filemtime($build_path . 'dashboard.css') : DOFS_VERSION
+            file_exists($build_path . 'dashboard.css') ? filemtime($build_path . 'dashboard.css') : DOFS_THEME_VERSION
         );
 
         // Enqueue scripts
@@ -79,7 +79,7 @@ class Shortcode {
             'dofs-dashboard',
             $build_url . 'dashboard.js',
             [],
-            file_exists($build_path . 'dashboard.js') ? filemtime($build_path . 'dashboard.js') : DOFS_VERSION,
+            file_exists($build_path . 'dashboard.js') ? filemtime($build_path . 'dashboard.js') : DOFS_THEME_VERSION,
             true
         );
 

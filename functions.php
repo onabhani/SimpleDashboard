@@ -328,3 +328,43 @@ function dofs_icon(string $name, string $class = 'w-5 h-5'): string {
 
     return '<svg class="' . esc_attr($class) . '" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">' . $path . '</svg>';
 }
+
+/**
+ * Load Dashboard REST API Module
+ */
+function dofs_load_dashboard_module() {
+    $dashboard_module = DOFS_THEME_DIR . '/includes/Dashboard/DashboardModule.php';
+
+    if (file_exists($dashboard_module)) {
+        require_once $dashboard_module;
+
+        $dashboard = new \SFS_HR\Dashboard\DashboardModule();
+        $dashboard->init();
+    }
+}
+add_action('after_setup_theme', 'dofs_load_dashboard_module');
+
+/**
+ * Register dashboard capabilities on theme activation
+ */
+function dofs_theme_activation() {
+    $admin = get_role('administrator');
+    if ($admin) {
+        // Dashboard capabilities
+        $admin->add_cap('dofs.view_dashboard');
+        $admin->add_cap('dofs.view_sales');
+        $admin->add_cap('dofs.view_orders');
+        $admin->add_cap('dofs.view_reports');
+        $admin->add_cap('dofs.view_inventory');
+
+        // HR capabilities
+        $admin->add_cap('sfs_hr.view_self');
+        $admin->add_cap('sfs_hr.view_team');
+        $admin->add_cap('sfs_hr.approve_leave');
+        $admin->add_cap('sfs_hr.approve_loan');
+        $admin->add_cap('sfs_hr.view_dashboard_manager');
+    }
+
+    flush_rewrite_rules();
+}
+add_action('after_switch_theme', 'dofs_theme_activation');
