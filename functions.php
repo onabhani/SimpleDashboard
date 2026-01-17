@@ -426,3 +426,131 @@ function dofs_get_user_setting(string $key, $default = '') {
     $value = get_user_meta(get_current_user_id(), 'dofs_' . $key, true);
     return $value !== '' ? $value : $default;
 }
+
+/**
+ * =============================================================================
+ * NOTIFICATION INTEGRATION HOOKS
+ *
+ * These filters allow notification plugins (Simple HR Suite, Simple Notification,
+ * Simple Flow Report) to check user preferences before sending notifications.
+ * =============================================================================
+ */
+
+/**
+ * Check if user should receive email notifications
+ *
+ * Usage in plugins:
+ * if (apply_filters('dofs_user_wants_email_notification', true, $user_id, $notification_type)) {
+ *     // Send email
+ * }
+ *
+ * @param bool   $should_send     Default true
+ * @param int    $user_id         User ID to check
+ * @param string $notification_type Type of notification (e.g., 'hr_request', 'flow_task', 'report')
+ * @return bool
+ */
+function dofs_filter_email_notification($should_send, $user_id, $notification_type = '') {
+    $enabled = get_user_meta($user_id, 'dofs_notifications_email', true);
+
+    // Default to enabled if not set
+    if ($enabled === '') {
+        return $should_send;
+    }
+
+    return $enabled === '1';
+}
+add_filter('dofs_user_wants_email_notification', 'dofs_filter_email_notification', 10, 3);
+
+/**
+ * Check if user should receive push notifications
+ *
+ * Usage in plugins:
+ * if (apply_filters('dofs_user_wants_push_notification', true, $user_id, $notification_type)) {
+ *     // Send push notification
+ * }
+ *
+ * @param bool   $should_send     Default true
+ * @param int    $user_id         User ID to check
+ * @param string $notification_type Type of notification
+ * @return bool
+ */
+function dofs_filter_push_notification($should_send, $user_id, $notification_type = '') {
+    $enabled = get_user_meta($user_id, 'dofs_notifications_push', true);
+
+    // Default to enabled if not set
+    if ($enabled === '') {
+        return $should_send;
+    }
+
+    return $enabled === '1';
+}
+add_filter('dofs_user_wants_push_notification', 'dofs_filter_push_notification', 10, 3);
+
+/**
+ * Get user's notification frequency preference
+ *
+ * Usage in plugins:
+ * $frequency = apply_filters('dofs_user_notification_frequency', 'instant', $user_id);
+ * // Returns: 'instant', 'daily', or 'weekly'
+ *
+ * @param string $default  Default frequency
+ * @param int    $user_id  User ID to check
+ * @return string 'instant', 'daily', or 'weekly'
+ */
+function dofs_filter_notification_frequency($default, $user_id) {
+    $frequency = get_user_meta($user_id, 'dofs_notifications_frequency', true);
+
+    if (empty($frequency)) {
+        return $default;
+    }
+
+    return $frequency;
+}
+add_filter('dofs_user_notification_frequency', 'dofs_filter_notification_frequency', 10, 2);
+
+/**
+ * Check if notification should be sent now based on frequency
+ *
+ * Usage in plugins:
+ * if (apply_filters('dofs_should_send_notification_now', true, $user_id, $notification_type)) {
+ *     // Send immediately
+ * } else {
+ *     // Queue for digest
+ * }
+ *
+ * @param bool   $should_send_now Default true
+ * @param int    $user_id         User ID
+ * @param string $notification_type Type of notification
+ * @return bool
+ */
+function dofs_filter_should_send_now($should_send_now, $user_id, $notification_type = '') {
+    $frequency = get_user_meta($user_id, 'dofs_notifications_frequency', true);
+
+    // If instant or not set, send immediately
+    if (empty($frequency) || $frequency === 'instant') {
+        return true;
+    }
+
+    // For daily/weekly, don't send immediately (queue for digest)
+    return false;
+}
+add_filter('dofs_should_send_notification_now', 'dofs_filter_should_send_now', 10, 3);
+
+/**
+ * Get all notification preferences for a user
+ *
+ * Usage in plugins:
+ * $prefs = apply_filters('dofs_get_user_notification_preferences', [], $user_id);
+ *
+ * @param array $preferences Default empty array
+ * @param int   $user_id     User ID
+ * @return array
+ */
+function dofs_get_notification_preferences($preferences, $user_id) {
+    return [
+        'email_enabled' => get_user_meta($user_id, 'dofs_notifications_email', true) !== '0',
+        'push_enabled' => get_user_meta($user_id, 'dofs_notifications_push', true) !== '0',
+        'frequency' => get_user_meta($user_id, 'dofs_notifications_frequency', true) ?: 'instant',
+    ];
+}
+add_filter('dofs_get_user_notification_preferences', 'dofs_get_notification_preferences', 10, 2);
