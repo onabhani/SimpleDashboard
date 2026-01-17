@@ -50,6 +50,11 @@ add_action('after_setup_theme', 'dofs_theme_setup');
  * Enqueue theme assets
  */
 function dofs_theme_assets() {
+    // Don't load on admin pages
+    if (is_admin()) {
+        return;
+    }
+
     // Main theme stylesheet
     wp_enqueue_style(
         'dofs-theme-style',
@@ -76,6 +81,15 @@ function dofs_theme_assets() {
     ]);
 }
 add_action('wp_enqueue_scripts', 'dofs_theme_assets');
+
+/**
+ * Add editor styles for block editor compatibility
+ */
+function dofs_editor_styles() {
+    add_theme_support('editor-styles');
+    add_editor_style('assets/css/editor-style.css');
+}
+add_action('after_setup_theme', 'dofs_editor_styles');
 
 /**
  * Get current user data for JavaScript
