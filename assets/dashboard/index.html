@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOFS Dashboard - Development</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="sfs-hr-dashboard-root" class="sfs-dashboard"></div>
+    <script>
+        // Mock boot data for development
+        window.SFS_HR_DASHBOARD_BOOT = {
+            rest_url: '/wp-json/sfs-hr/v1/dashboard/',
+            nonce: 'dev-nonce',
+            user: {
+                id: 1,
+                name: 'John Manager',
+                avatar: null,
+                roles: ['administrator'],
+                is_manager: true,
+            },
+            menu_items: [
+                { id: 1, title: 'Home', url: '/', target: '' },
+                { id: 2, title: 'HR Portal', url: '/hr', target: '' },
+            ],
+        };
+    </script>
+    <script type="module" src="/src/index.jsx"></script>
+</body>
+</html>

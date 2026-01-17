@@ -1,0 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build artifacts (keep build folder but ignore source maps)
+*.map
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# WordPress
+wp-config.php
+wp-content/uploads/
+wp-content/upgrade/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.local

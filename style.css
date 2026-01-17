@@ -1,0 +1,17 @@
+/*
+Theme Name: DOFS System Dashboard
+Theme URI: https://example.com/dofs-theme
+Author: DOFS
+Author URI: https://example.com
+Description: Comprehensive business dashboard theme with persistent header/sidebar navigation. Includes Sales, Orders, HR, Reports, Inventory, and Quick Access modules.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.4
+Requires PHP: 8.0
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: dofs-theme
+Tags: dashboard, business, custom-menu, custom-logo, featured-images
+*/
+
+/* Base theme styles - Tailwind CSS is loaded separately */
