@@ -68,10 +68,10 @@ function dofs_theme_assets() {
     );
 
     // Localize script with theme data
-    wp_localize_script('dofs-theme-script', 'DOFS_THEME', [
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('dofs_theme_nonce'),
-        'rest_url' => rest_url('dofs/v1/'),
+    wp_localize_script('dofs-theme-script', 'dofsTheme', [
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('wp_rest'),
+        'restUrl' => rest_url('sfs-hr/v1/dashboard/'),
         'user' => dofs_get_current_user_data(),
     ]);
 }
@@ -368,3 +368,189 @@ function dofs_theme_activation() {
     flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'dofs_theme_activation');
+
+/**
+ * Handle AJAX settings save
+ */
+function dofs_save_settings() {
+    // Verify nonce
+    if (!isset($_POST['dofs_settings_nonce']) || !wp_verify_nonce($_POST['dofs_settings_nonce'], 'dofs_save_settings')) {
+        wp_send_json_error(__('Security check failed', 'dofs-theme'));
+    }
+
+    // Check user is logged in
+    if (!is_user_logged_in()) {
+        wp_send_json_error(__('You must be logged in', 'dofs-theme'));
+    }
+
+    $user_id = get_current_user_id();
+
+    // Sanitize and save settings
+    $settings_to_save = [
+        'dofs_theme_preference' => sanitize_text_field($_POST['theme'] ?? 'system'),
+        'dofs_language' => sanitize_text_field($_POST['language'] ?? 'en_US'),
+        'dofs_date_format' => sanitize_text_field($_POST['date_format'] ?? 'd/m/Y'),
+        'dofs_time_format' => sanitize_text_field($_POST['time_format'] ?? 'g:i a'),
+        'dofs_timezone' => sanitize_text_field($_POST['timezone'] ?? 'UTC'),
+        'dofs_currency' => sanitize_text_field($_POST['currency'] ?? 'SAR'),
+        'dofs_number_format' => sanitize_text_field($_POST['number_format'] ?? 'en'),
+        'dofs_notifications_email' => isset($_POST['notifications_email']) ? '1' : '0',
+        'dofs_notifications_push' => isset($_POST['notifications_push']) ? '1' : '0',
+        'dofs_notifications_frequency' => sanitize_text_field($_POST['notifications_frequency'] ?? 'instant'),
+    ];
+
+    foreach ($settings_to_save as $meta_key => $meta_value) {
+        update_user_meta($user_id, $meta_key, $meta_value);
+    }
+
+    // Handle Quick Access visibility (save hidden items)
+    $all_quick_access = ['sales', 'orders', 'hr', 'reports', 'inventory', 'customers'];
+    $visible_items = isset($_POST['quick_access_visible']) && is_array($_POST['quick_access_visible'])
+        ? array_map('sanitize_text_field', $_POST['quick_access_visible'])
+        : [];
+    $hidden_items = array_diff($all_quick_access, $visible_items);
+    update_user_meta($user_id, 'dofs_quick_access_hidden', array_values($hidden_items));
+
+    wp_send_json_success(__('Settings saved successfully', 'dofs-theme'));
+}
+add_action('wp_ajax_dofs_save_settings', 'dofs_save_settings');
+
+/**
+ * Get user setting value with default fallback
+ */
+function dofs_get_user_setting(string $key, $default = '') {
+    if (!is_user_logged_in()) {
+        return $default;
+    }
+
+    $value = get_user_meta(get_current_user_id(), 'dofs_' . $key, true);
+    return $value !== '' ? $value : $default;
+}
+
+/**
+ * =============================================================================
+ * NOTIFICATION INTEGRATION HOOKS
+ *
+ * These filters allow notification plugins (Simple HR Suite, Simple Notification,
+ * Simple Flow Report) to check user preferences before sending notifications.
+ * =============================================================================
+ */
+
+/**
+ * Check if user should receive email notifications
+ *
+ * Usage in plugins:
+ * if (apply_filters('dofs_user_wants_email_notification', true, $user_id, $notification_type)) {
+ *     // Send email
+ * }
+ *
+ * @param bool   $should_send     Default true
+ * @param int    $user_id         User ID to check
+ * @param string $notification_type Type of notification (e.g., 'hr_request', 'flow_task', 'report')
+ * @return bool
+ */
+function dofs_filter_email_notification($should_send, $user_id, $notification_type = '') {
+    $enabled = get_user_meta($user_id, 'dofs_notifications_email', true);
+
+    // Default to enabled if not set
+    if ($enabled === '') {
+        return $should_send;
+    }
+
+    return $enabled === '1';
+}
+add_filter('dofs_user_wants_email_notification', 'dofs_filter_email_notification', 10, 3);
+
+/**
+ * Check if user should receive push notifications
+ *
+ * Usage in plugins:
+ * if (apply_filters('dofs_user_wants_push_notification', true, $user_id, $notification_type)) {
+ *     // Send push notification
+ * }
+ *
+ * @param bool   $should_send     Default true
+ * @param int    $user_id         User ID to check
+ * @param string $notification_type Type of notification
+ * @return bool
+ */
+function dofs_filter_push_notification($should_send, $user_id, $notification_type = '') {
+    $enabled = get_user_meta($user_id, 'dofs_notifications_push', true);
+
+    // Default to enabled if not set
+    if ($enabled === '') {
+        return $should_send;
+    }
+
+    return $enabled === '1';
+}
+add_filter('dofs_user_wants_push_notification', 'dofs_filter_push_notification', 10, 3);
+
+/**
+ * Get user's notification frequency preference
+ *
+ * Usage in plugins:
+ * $frequency = apply_filters('dofs_user_notification_frequency', 'instant', $user_id);
+ * // Returns: 'instant', 'daily', or 'weekly'
+ *
+ * @param string $default  Default frequency
+ * @param int    $user_id  User ID to check
+ * @return string 'instant', 'daily', or 'weekly'
+ */
+function dofs_filter_notification_frequency($default, $user_id) {
+    $frequency = get_user_meta($user_id, 'dofs_notifications_frequency', true);
+
+    if (empty($frequency)) {
+        return $default;
+    }
+
+    return $frequency;
+}
+add_filter('dofs_user_notification_frequency', 'dofs_filter_notification_frequency', 10, 2);
+
+/**
+ * Check if notification should be sent now based on frequency
+ *
+ * Usage in plugins:
+ * if (apply_filters('dofs_should_send_notification_now', true, $user_id, $notification_type)) {
+ *     // Send immediately
+ * } else {
+ *     // Queue for digest
+ * }
+ *
+ * @param bool   $should_send_now Default true
+ * @param int    $user_id         User ID
+ * @param string $notification_type Type of notification
+ * @return bool
+ */
+function dofs_filter_should_send_now($should_send_now, $user_id, $notification_type = '') {
+    $frequency = get_user_meta($user_id, 'dofs_notifications_frequency', true);
+
+    // If instant or not set, send immediately
+    if (empty($frequency) || $frequency === 'instant') {
+        return true;
+    }
+
+    // For daily/weekly, don't send immediately (queue for digest)
+    return false;
+}
+add_filter('dofs_should_send_notification_now', 'dofs_filter_should_send_now', 10, 3);
+
+/**
+ * Get all notification preferences for a user
+ *
+ * Usage in plugins:
+ * $prefs = apply_filters('dofs_get_user_notification_preferences', [], $user_id);
+ *
+ * @param array $preferences Default empty array
+ * @param int   $user_id     User ID
+ * @return array
+ */
+function dofs_get_notification_preferences($preferences, $user_id) {
+    return [
+        'email_enabled' => get_user_meta($user_id, 'dofs_notifications_email', true) !== '0',
+        'push_enabled' => get_user_meta($user_id, 'dofs_notifications_push', true) !== '0',
+        'frequency' => get_user_meta($user_id, 'dofs_notifications_frequency', true) ?: 'instant',
+    ];
+}
+add_filter('dofs_get_user_notification_preferences', 'dofs_get_notification_preferences', 10, 2);

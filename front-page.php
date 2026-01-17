@@ -41,18 +41,34 @@ get_sidebar();
             </h2>
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <?php
-                $quick_access = [
-                    ['title' => __('Sales', 'dofs-theme'), 'icon' => 'chart', 'url' => home_url('/sales/'), 'gradient' => 'from-blue-500 to-blue-600', 'shadow' => 'shadow-blue-500/25'],
-                    ['title' => __('Orders', 'dofs-theme'), 'icon' => 'cart', 'url' => home_url('/orders/'), 'gradient' => 'from-purple-500 to-purple-600', 'shadow' => 'shadow-purple-500/25'],
-                    ['title' => __('HR', 'dofs-theme'), 'icon' => 'team', 'url' => home_url('/hr/'), 'gradient' => 'from-green-500 to-green-600', 'shadow' => 'shadow-green-500/25'],
-                    ['title' => __('Reports', 'dofs-theme'), 'icon' => 'document', 'url' => home_url('/reports/'), 'gradient' => 'from-orange-500 to-orange-600', 'shadow' => 'shadow-orange-500/25'],
-                    ['title' => __('Inventory', 'dofs-theme'), 'icon' => 'cube', 'url' => home_url('/products/'), 'gradient' => 'from-pink-500 to-pink-600', 'shadow' => 'shadow-pink-500/25'],
-                    ['title' => __('Customers', 'dofs-theme'), 'icon' => 'users', 'url' => home_url('/customers/'), 'gradient' => 'from-cyan-500 to-cyan-600', 'shadow' => 'shadow-cyan-500/25'],
-                ];
+                /**
+                 * Filter: dofs_quick_access_items
+                 * Customize Quick Access cards
+                 *
+                 * @param array $items Array of quick access items
+                 * Each item: ['id', 'title', 'icon', 'url', 'gradient', 'shadow']
+                 */
+                $quick_access = apply_filters('dofs_quick_access_items', [
+                    ['id' => 'sales', 'title' => __('Sales', 'dofs-theme'), 'icon' => 'chart', 'url' => home_url('/sales/'), 'gradient' => 'from-blue-500 to-blue-600', 'shadow' => 'shadow-blue-500/25'],
+                    ['id' => 'orders', 'title' => __('Orders', 'dofs-theme'), 'icon' => 'cart', 'url' => home_url('/orders/'), 'gradient' => 'from-purple-500 to-purple-600', 'shadow' => 'shadow-purple-500/25'],
+                    ['id' => 'hr', 'title' => __('HR', 'dofs-theme'), 'icon' => 'team', 'url' => home_url('/hr/'), 'gradient' => 'from-green-500 to-green-600', 'shadow' => 'shadow-green-500/25'],
+                    ['id' => 'reports', 'title' => __('Reports', 'dofs-theme'), 'icon' => 'document', 'url' => home_url('/reports/'), 'gradient' => 'from-orange-500 to-orange-600', 'shadow' => 'shadow-orange-500/25'],
+                    ['id' => 'inventory', 'title' => __('Inventory', 'dofs-theme'), 'icon' => 'cube', 'url' => home_url('/products/'), 'gradient' => 'from-pink-500 to-pink-600', 'shadow' => 'shadow-pink-500/25'],
+                    ['id' => 'customers', 'title' => __('Customers', 'dofs-theme'), 'icon' => 'users', 'url' => home_url('/customers/'), 'gradient' => 'from-cyan-500 to-cyan-600', 'shadow' => 'shadow-cyan-500/25'],
+                ]);
+
+                // Filter out hidden items based on user settings
+                $hidden_items = get_user_meta(get_current_user_id(), 'dofs_quick_access_hidden', true);
+                $hidden_items = is_array($hidden_items) ? $hidden_items : [];
+
+                $quick_access = array_filter($quick_access, function($item) use ($hidden_items) {
+                    $item_id = $item['id'] ?? sanitize_title($item['title']);
+                    return !in_array($item_id, $hidden_items);
+                });
 
                 foreach ($quick_access as $item):
                 ?>
-                <a href="<?php echo esc_url($item['url']); ?>" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br <?php echo esc_attr($item['gradient']); ?> p-5 text-white shadow-lg <?php echo esc_attr($item['shadow']); ?> hover:scale-105 transition-transform duration-200">
+                <a href="<?php echo esc_url($item['url']); ?>" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br <?php echo esc_attr($item['gradient']); ?> p-5 text-white shadow-lg <?php echo esc_attr($item['shadow']); ?> hover:scale-105 transition-transform duration-200 aspect-square flex flex-col justify-between">
                     <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="relative">
                         <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-3">

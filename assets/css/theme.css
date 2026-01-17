@@ -364,6 +364,7 @@ img, video {
 
 /* Sizing */
 .aspect-video { aspect-ratio: 16 / 9; }
+.aspect-square { aspect-ratio: 1 / 1; }
 .aspect-\[3\/1\] { aspect-ratio: 3 / 1; }
 
 /* Typography */
@@ -774,14 +775,24 @@ img, video {
    WordPress Specific Overrides
    ======================================== */
 
-/* Remove default WordPress admin bar spacing */
-.admin-bar #dofs-app {
-    margin-top: 32px;
+/* WordPress admin bar adjustments */
+.admin-bar .sticky.top-0 {
+    top: 32px;
+}
+
+.admin-bar #sidebar {
+    top: 32px;
+    height: calc(100vh - 32px);
 }
 
 @media (max-width: 782px) {
-    .admin-bar #dofs-app {
-        margin-top: 46px;
+    .admin-bar .sticky.top-0 {
+        top: 46px;
+    }
+
+    .admin-bar #sidebar {
+        top: 46px;
+        height: calc(100vh - 46px);
     }
 }
 
