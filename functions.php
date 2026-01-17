@@ -368,3 +368,61 @@ function dofs_theme_activation() {
     flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'dofs_theme_activation');
+
+/**
+ * Handle AJAX settings save
+ */
+function dofs_save_settings() {
+    // Verify nonce
+    if (!isset($_POST['dofs_settings_nonce']) || !wp_verify_nonce($_POST['dofs_settings_nonce'], 'dofs_save_settings')) {
+        wp_send_json_error(__('Security check failed', 'dofs-theme'));
+    }
+
+    // Check user is logged in
+    if (!is_user_logged_in()) {
+        wp_send_json_error(__('You must be logged in', 'dofs-theme'));
+    }
+
+    $user_id = get_current_user_id();
+
+    // Sanitize and save settings
+    $settings_to_save = [
+        'dofs_theme_preference' => sanitize_text_field($_POST['theme'] ?? 'system'),
+        'dofs_language' => sanitize_text_field($_POST['language'] ?? 'en_US'),
+        'dofs_date_format' => sanitize_text_field($_POST['date_format'] ?? 'd/m/Y'),
+        'dofs_time_format' => sanitize_text_field($_POST['time_format'] ?? 'g:i a'),
+        'dofs_timezone' => sanitize_text_field($_POST['timezone'] ?? 'UTC'),
+        'dofs_currency' => sanitize_text_field($_POST['currency'] ?? 'SAR'),
+        'dofs_number_format' => sanitize_text_field($_POST['number_format'] ?? 'en'),
+        'dofs_notifications_email' => isset($_POST['notifications_email']) ? '1' : '0',
+        'dofs_notifications_push' => isset($_POST['notifications_push']) ? '1' : '0',
+        'dofs_notifications_frequency' => sanitize_text_field($_POST['notifications_frequency'] ?? 'instant'),
+    ];
+
+    foreach ($settings_to_save as $meta_key => $meta_value) {
+        update_user_meta($user_id, $meta_key, $meta_value);
+    }
+
+    // Handle Quick Access visibility (save hidden items)
+    $all_quick_access = ['sales', 'orders', 'hr', 'reports', 'inventory', 'customers'];
+    $visible_items = isset($_POST['quick_access_visible']) && is_array($_POST['quick_access_visible'])
+        ? array_map('sanitize_text_field', $_POST['quick_access_visible'])
+        : [];
+    $hidden_items = array_diff($all_quick_access, $visible_items);
+    update_user_meta($user_id, 'dofs_quick_access_hidden', array_values($hidden_items));
+
+    wp_send_json_success(__('Settings saved successfully', 'dofs-theme'));
+}
+add_action('wp_ajax_dofs_save_settings', 'dofs_save_settings');
+
+/**
+ * Get user setting value with default fallback
+ */
+function dofs_get_user_setting(string $key, $default = '') {
+    if (!is_user_logged_in()) {
+        return $default;
+    }
+
+    $value = get_user_meta(get_current_user_id(), 'dofs_' . $key, true);
+    return $value !== '' ? $value : $default;
+}
