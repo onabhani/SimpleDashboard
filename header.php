@@ -80,14 +80,44 @@
                 </button>
 
                 <!-- Notifications -->
-                <button
-                    type="button"
-                    class="relative p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700 transition-colors"
-                    aria-label="<?php esc_attr_e('Notifications', 'dofs-theme'); ?>"
-                >
-                    <?php echo dofs_icon('bell', 'w-5 h-5'); ?>
-                    <span class="absolute top-1.5 end-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white dark:ring-gray-800"></span>
-                </button>
+                <div class="relative" id="notifications-container">
+                    <button
+                        type="button"
+                        id="notifications-toggle"
+                        class="relative p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        aria-label="<?php esc_attr_e('Notifications', 'dofs-theme'); ?>"
+                    >
+                        <?php echo dofs_icon('bell', 'w-5 h-5'); ?>
+                        <?php
+                        /**
+                         * Hook: dofs_notification_count
+                         * Render notification badge count
+                         */
+                        do_action('dofs_notification_count');
+                        ?>
+                    </button>
+
+                    <!-- Notifications dropdown -->
+                    <div
+                        id="notifications-dropdown"
+                        class="hidden absolute end-0 mt-2 w-80 rounded-xl bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-gray-700 z-50"
+                    >
+                        <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                            <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+                                <?php esc_html_e('Notifications', 'dofs-theme'); ?>
+                            </h3>
+                        </div>
+                        <div class="max-h-96 overflow-y-auto">
+                            <?php
+                            /**
+                             * Hook: dofs_topbar_notifications
+                             * Render notification items in dropdown
+                             */
+                            do_action('dofs_topbar_notifications');
+                            ?>
+                        </div>
+                    </div>
+                </div>
 
                 <!-- User dropdown -->
                 <?php if (is_user_logged_in()):
