@@ -175,7 +175,7 @@
                                 <?php echo esc_html($current_user->user_email); ?>
                             </p>
                         </div>
-                        <a href="<?php echo esc_url(get_edit_profile_url()); ?>" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                        <a href="<?php echo esc_url(home_url('/my-hr/')); ?>" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                             <?php echo dofs_icon('user', 'w-4 h-4'); ?>
                             <?php esc_html_e('My Profile', 'dofs-theme'); ?>
                         </a>
