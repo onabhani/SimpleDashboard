@@ -54,5 +54,9 @@ class RestController {
         // Reports Overview endpoint
         $reports = new Endpoints\ReportsOverview();
         $reports->register(self::NAMESPACE);
+
+        // Gravity Forms Search endpoint
+        $gf_search = new Endpoints\GravityFormsSearch();
+        $gf_search->register(self::NAMESPACE);
     }
 }

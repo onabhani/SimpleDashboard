@@ -68,10 +68,10 @@ function dofs_theme_assets() {
     );
 
     // Localize script with theme data
-    wp_localize_script('dofs-theme-script', 'DOFS_THEME', [
-        'ajax_url' => admin_url('admin-ajax.php'),
-        'nonce' => wp_create_nonce('dofs_theme_nonce'),
-        'rest_url' => rest_url('dofs/v1/'),
+    wp_localize_script('dofs-theme-script', 'dofsTheme', [
+        'ajaxUrl' => admin_url('admin-ajax.php'),
+        'nonce' => wp_create_nonce('wp_rest'),
+        'restUrl' => rest_url('sfs-hr/v1/dashboard/'),
         'user' => dofs_get_current_user_data(),
     ]);
 }

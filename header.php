@@ -41,7 +41,7 @@
 
             <!-- Center section: Search -->
             <div class="hidden md:flex flex-1 max-w-xl mx-8">
-                <div class="relative w-full">
+                <div class="relative w-full" id="search-container">
                     <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                         <?php echo dofs_icon('search', 'w-5 h-5 text-gray-400'); ?>
                     </div>
@@ -49,11 +49,28 @@
                         type="search"
                         id="topbar-search"
                         class="block w-full ps-10 pe-4 py-2.5 text-sm text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 border-0 rounded-xl focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 placeholder-gray-500 dark:placeholder-gray-400 transition-shadow"
-                        placeholder="<?php esc_attr_e('Search anything...', 'dofs-theme'); ?>"
+                        placeholder="<?php esc_attr_e('Search entries...', 'dofs-theme'); ?>"
+                        autocomplete="off"
                     >
-                    <kbd class="absolute inset-y-0 end-3 flex items-center text-xs text-gray-400 font-sans">
+                    <kbd class="absolute inset-y-0 end-3 flex items-center text-xs text-gray-400 font-sans" id="search-hint">
                         <span class="hidden lg:inline px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-600">⌘K</span>
                     </kbd>
+                    <!-- Search loading indicator -->
+                    <div id="search-loading" class="hidden absolute inset-y-0 end-3 flex items-center">
+                        <svg class="animate-spin w-5 h-5 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+                        </svg>
+                    </div>
+                    <!-- Search results dropdown -->
+                    <div
+                        id="search-results"
+                        class="hidden absolute top-full left-0 right-0 mt-2 rounded-xl bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-gray-700 z-50 overflow-hidden"
+                    >
+                        <div class="max-h-96 overflow-y-auto" id="search-results-list">
+                            <!-- Results populated by JavaScript -->
+                        </div>
+                    </div>
                 </div>
             </div>
 

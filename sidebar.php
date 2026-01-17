@@ -11,14 +11,14 @@ $sidebar_menu = dofs_get_sidebar_menu();
 <!-- Sidebar backdrop (mobile) -->
 <div
     id="sidebar-backdrop"
-    class="fixed inset-0 z-20 bg-gray-900/50 backdrop-blur-sm lg:hidden hidden"
+    class="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden hidden"
     aria-hidden="true"
 ></div>
 
 <!-- Sidebar -->
 <aside
     id="sidebar"
-    class="fixed lg:static inset-y-0 start-0 z-30 w-64 flex-shrink-0 bg-white dark:bg-gray-800 border-e border-gray-200 dark:border-gray-700 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out"
+    class="fixed lg:static inset-y-0 start-0 z-50 w-64 flex-shrink-0 bg-white dark:bg-gray-800 border-e border-gray-200 dark:border-gray-700 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out"
 >
     <div class="flex flex-col h-full pt-16 lg:pt-0">
         <!-- Mobile close button -->
