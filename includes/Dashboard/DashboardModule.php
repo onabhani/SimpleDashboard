@@ -42,5 +42,6 @@ class DashboardModule {
         require_once $base_dir . 'Endpoints/FlowTasks.php';
         require_once $base_dir . 'Endpoints/SalesOverview.php';
         require_once $base_dir . 'Endpoints/ReportsOverview.php';
+        require_once $base_dir . 'Endpoints/GravityFormsSearch.php';
     }
 }
