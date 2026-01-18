@@ -776,8 +776,17 @@ img, video {
    ======================================== */
 
 /* WordPress admin bar adjustments */
-.admin-bar #dofs-app {
+html.admin-bar {
+    margin-top: 0 !important;
+}
+
+html.admin-bar body {
+    margin-top: 0 !important;
     padding-top: 0 !important;
+}
+
+.admin-bar #dofs-app {
+    padding-top: 32px;
     margin-top: 0 !important;
 }
 
@@ -795,6 +804,10 @@ img, video {
 }
 
 @media (max-width: 782px) {
+    .admin-bar #dofs-app {
+        padding-top: 46px;
+    }
+
     .admin-bar .sticky.top-0 {
         top: 46px;
     }
@@ -810,6 +823,10 @@ img, video {
 }
 
 @media (max-width: 600px) {
+    .admin-bar #dofs-app {
+        padding-top: 0;
+    }
+
     .admin-bar .sticky.top-0 {
         top: 0;
     }
