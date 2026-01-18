@@ -52,9 +52,6 @@
                         placeholder="<?php esc_attr_e('Search entries...', 'dofs-theme'); ?>"
                         autocomplete="off"
                     >
-                    <kbd class="absolute inset-y-0 end-3 flex items-center text-xs text-gray-400 font-sans" id="search-hint">
-                        <span class="hidden lg:inline px-1.5 py-0.5 rounded bg-gray-200 dark:bg-gray-600">⌘K</span>
-                    </kbd>
                     <!-- Search loading indicator -->
                     <div id="search-loading" class="hidden absolute inset-y-0 end-3 flex items-center">
                         <svg class="animate-spin w-5 h-5 text-primary-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

@@ -210,7 +210,7 @@
     }
 
     /**
-     * Search (Cmd/Ctrl + K) with Gravity Forms entries
+     * Search with Gravity Forms entries
      */
     function initSearch() {
         const searchInput = document.getElementById('topbar-search');
@@ -218,21 +218,11 @@
         const searchResults = document.getElementById('search-results');
         const searchResultsList = document.getElementById('search-results-list');
         const searchLoading = document.getElementById('search-loading');
-        const searchHint = document.getElementById('search-hint');
 
-        if (!searchInput || !searchResults) return;
+        if (!searchInput || !searchResults || !searchResultsList) return;
 
         let searchTimeout = null;
         let currentQuery = '';
-
-        // Cmd/Ctrl + K shortcut
-        document.addEventListener('keydown', function(e) {
-            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-                e.preventDefault();
-                searchInput.focus();
-                searchInput.select();
-            }
-        });
 
         // Handle input
         searchInput.addEventListener('input', function(e) {
@@ -265,7 +255,7 @@
 
         // Close results on click outside
         document.addEventListener('click', function(e) {
-            if (!searchContainer.contains(e.target)) {
+            if (searchContainer && !searchContainer.contains(e.target)) {
                 hideResults();
             }
         });
@@ -313,17 +303,14 @@
 
         function showResults() {
             searchResults.classList.remove('hidden');
-            if (searchHint) searchHint.classList.add('hidden');
         }
 
         function hideResults() {
             searchResults.classList.add('hidden');
-            if (searchHint) searchHint.classList.remove('hidden');
         }
 
         function showLoading() {
             if (searchLoading) searchLoading.classList.remove('hidden');
-            if (searchHint) searchHint.classList.add('hidden');
         }
 
         function hideLoading() {
@@ -333,25 +320,36 @@
         function performSearch(query) {
             showLoading();
 
-            const apiUrl = (window.dofsTheme && window.dofsTheme.restUrl)
-                ? window.dofsTheme.restUrl + 'search/entries'
-                : '/wp-json/sfs-hr/v1/dashboard/search/entries';
+            // Build the API URL
+            var baseUrl = window.location.origin;
+            var restUrl = '/wp-json/sfs-hr/v1/dashboard/search/entries';
 
-            const url = new URL(apiUrl, window.location.origin);
-            url.searchParams.append('q', query);
+            if (window.dofsTheme && window.dofsTheme.restUrl) {
+                restUrl = window.dofsTheme.restUrl + 'search/entries';
+            }
+
+            var url = baseUrl + restUrl + '?q=' + encodeURIComponent(query);
+
+            var headers = {
+                'Content-Type': 'application/json'
+            };
+
+            if (window.dofsTheme && window.dofsTheme.nonce) {
+                headers['X-WP-Nonce'] = window.dofsTheme.nonce;
+            }
 
             fetch(url, {
                 method: 'GET',
-                headers: {
-                    'X-WP-Nonce': window.dofsTheme ? window.dofsTheme.nonce : ''
-                },
+                headers: headers,
                 credentials: 'same-origin'
             })
             .then(function(response) {
-                if (!response.ok) {
-                    throw new Error('Search failed');
-                }
-                return response.json();
+                return response.json().then(function(data) {
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Search failed');
+                    }
+                    return data;
+                });
             })
             .then(function(data) {
                 hideLoading();
@@ -361,6 +359,10 @@
                 if (data.results && data.results.length > 0) {
                     renderResults(data.results, data.total);
                     showResults();
+                } else if (data.code) {
+                    // API returned an error
+                    renderErrorMessage(data.message || 'Search error');
+                    showResults();
                 } else {
                     renderNoResults(query);
                     showResults();
@@ -369,7 +371,7 @@
             .catch(function(error) {
                 hideLoading();
                 console.error('Search error:', error);
-                renderError();
+                renderErrorMessage(error.message || 'Search failed. Please try again.');
                 showResults();
             });
         }
@@ -405,9 +407,9 @@
                 '</div>';
         }
 
-        function renderError() {
+        function renderErrorMessage(message) {
             searchResultsList.innerHTML = '<div class="px-4 py-8 text-center">' +
-                '<p class="text-sm text-red-500 dark:text-red-400">Search failed. Please try again.</p>' +
+                '<p class="text-sm text-red-500 dark:text-red-400">' + escapeHtml(message) + '</p>' +
                 '</div>';
         }
 

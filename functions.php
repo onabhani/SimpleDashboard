@@ -309,6 +309,22 @@ function dofs_body_classes($classes) {
 add_filter('body_class', 'dofs_body_classes');
 
 /**
+ * Override WordPress admin bar margin on html element
+ * WordPress adds margin-top: 32px to html which we need to remove
+ */
+function dofs_admin_bar_fix() {
+    if (is_admin_bar_showing()) {
+        ?>
+        <style id="dofs-admin-bar-fix">
+            html { margin-top: 0 !important; }
+            * html body { margin-top: 0 !important; }
+        </style>
+        <?php
+    }
+}
+add_action('wp_head', 'dofs_admin_bar_fix', 999);
+
+/**
  * SVG Icon helper function
  */
 function dofs_icon(string $name, string $class = 'w-5 h-5'): string {
