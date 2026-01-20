@@ -32,10 +32,12 @@ $user_settings = [
 ];
 
 get_header();
+get_sidebar();
 ?>
 
-<main class="flex-1 overflow-y-auto p-4 lg:p-6">
-    <div class="max-w-4xl mx-auto">
+<main class="flex-1 overflow-y-auto">
+    <div class="p-4 sm:p-6 lg:p-8">
+        <div class="max-w-4xl mx-auto">
         <!-- Page Header -->
         <div class="mb-6">
             <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
@@ -380,6 +382,7 @@ get_header();
                 <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7" />
             </svg>
             <span><?php esc_html_e('Settings saved successfully!', 'dofs-theme'); ?></span>
+        </div>
         </div>
     </div>
 </main>

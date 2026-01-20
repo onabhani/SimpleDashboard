@@ -68,13 +68,13 @@ get_sidebar();
 
                 foreach ($quick_access as $item):
                 ?>
-                <a href="<?php echo esc_url($item['url']); ?>" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br <?php echo esc_attr($item['gradient']); ?> p-5 text-white shadow-lg <?php echo esc_attr($item['shadow']); ?> hover:scale-105 transition-transform duration-200 aspect-square flex flex-col justify-between">
+                <a href="<?php echo esc_url($item['url']); ?>" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br <?php echo esc_attr($item['gradient']); ?> p-4 sm:p-5 text-white shadow-lg <?php echo esc_attr($item['shadow']); ?> hover:scale-105 transition-transform duration-200 min-h-[100px] sm:min-h-[120px] lg:aspect-square flex flex-col justify-between">
                     <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="relative">
-                        <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-3">
-                            <?php echo dofs_icon($item['icon'], 'w-6 h-6'); ?>
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/20 flex items-center justify-center mb-2 sm:mb-3">
+                            <?php echo dofs_icon($item['icon'], 'w-5 h-5 sm:w-6 sm:h-6'); ?>
                         </div>
-                        <h3 class="font-semibold"><?php echo esc_html($item['title']); ?></h3>
+                        <h3 class="font-medium sm:font-semibold text-sm sm:text-base"><?php echo esc_html($item['title']); ?></h3>
                     </div>
                 </a>
                 <?php endforeach; ?>
