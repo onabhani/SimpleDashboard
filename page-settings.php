@@ -388,6 +388,9 @@ get_header();
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('settings-form');
     const successMsg = document.getElementById('settings-success');
+    const ajaxUrl = '<?php echo esc_js(admin_url('admin-ajax.php')); ?>';
+
+    if (!form) return;
 
     // Handle theme radio changes for visual feedback
     form.querySelectorAll('input[name="theme"]').forEach(function(radio) {
@@ -423,10 +426,15 @@ document.addEventListener('DOMContentLoaded', function() {
     form.addEventListener('submit', function(e) {
         e.preventDefault();
 
+        const submitBtn = form.querySelector('button[type="submit"]');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = '<?php echo esc_js(__('Saving...', 'dofs-theme')); ?>';
+        submitBtn.disabled = true;
+
         const formData = new FormData(form);
         formData.append('action', 'dofs_save_settings');
 
-        fetch(dofsTheme.ajaxUrl, {
+        fetch(ajaxUrl, {
             method: 'POST',
             body: formData,
             credentials: 'same-origin'
@@ -435,6 +443,9 @@ document.addEventListener('DOMContentLoaded', function() {
             return response.json();
         })
         .then(function(data) {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+
             if (data.success) {
                 // Show success message
                 successMsg.classList.remove('hidden');
@@ -443,28 +454,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 }, 3000);
 
                 // Apply theme immediately if changed
-                if (formData.get('theme')) {
-                    applyTheme(formData.get('theme'));
+                const themeValue = formData.get('theme');
+                if (themeValue) {
+                    applyTheme(themeValue);
                 }
             } else {
-                alert(data.data || 'Failed to save settings');
+                alert(data.data || '<?php echo esc_js(__('Failed to save settings', 'dofs-theme')); ?>');
             }
         })
         .catch(function(error) {
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
             console.error('Error:', error);
-            alert('An error occurred while saving settings');
+            alert('<?php echo esc_js(__('An error occurred while saving settings', 'dofs-theme')); ?>');
         });
     });
 
     function applyTheme(theme) {
         if (theme === 'dark') {
             document.documentElement.classList.add('dark');
-            localStorage.setItem('theme', 'dark');
+            localStorage.setItem('dofs-theme', 'dark');
         } else if (theme === 'light') {
             document.documentElement.classList.remove('dark');
-            localStorage.setItem('theme', 'light');
+            localStorage.setItem('dofs-theme', 'light');
         } else {
-            localStorage.removeItem('theme');
+            localStorage.removeItem('dofs-theme');
             if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
                 document.documentElement.classList.add('dark');
             } else {

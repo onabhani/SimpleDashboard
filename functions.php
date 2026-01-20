@@ -375,7 +375,7 @@ function dofs_load_dashboard_module() {
 add_action('after_setup_theme', 'dofs_load_dashboard_module');
 
 /**
- * Register dashboard capabilities on theme activation
+ * Register dashboard capabilities and create required pages on theme activation
  */
 function dofs_theme_activation() {
     $admin = get_role('administrator');
@@ -395,9 +395,51 @@ function dofs_theme_activation() {
         $admin->add_cap('sfs_hr.view_dashboard_manager');
     }
 
+    // Create required pages
+    dofs_create_required_pages();
+
     flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'dofs_theme_activation');
+
+/**
+ * Create required pages (Settings, Help) if they don't exist
+ */
+function dofs_create_required_pages() {
+    $pages = [
+        [
+            'slug' => 'settings',
+            'title' => __('Settings', 'dofs-theme'),
+            'template' => 'page-settings.php',
+        ],
+        [
+            'slug' => 'help',
+            'title' => __('Help', 'dofs-theme'),
+            'template' => 'page-help.php',
+        ],
+    ];
+
+    foreach ($pages as $page_data) {
+        // Check if page exists
+        $existing = get_page_by_path($page_data['slug']);
+
+        if (!$existing) {
+            // Create the page
+            $page_id = wp_insert_post([
+                'post_title' => $page_data['title'],
+                'post_name' => $page_data['slug'],
+                'post_status' => 'publish',
+                'post_type' => 'page',
+                'post_content' => '',
+            ]);
+
+            // Set page template if specified
+            if ($page_id && !is_wp_error($page_id) && !empty($page_data['template'])) {
+                update_post_meta($page_id, '_wp_page_template', $page_data['template']);
+            }
+        }
+    }
+}
 
 /**
  * Handle AJAX settings save
