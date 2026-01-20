@@ -80,15 +80,15 @@ $sidebar_menu = dofs_get_sidebar_menu();
         </nav>
 
         <!-- Footer -->
-        <div class="p-4 border-t border-gray-200 dark:border-gray-700">
-            <div class="flex items-center gap-3 p-3 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-700/30">
+        <div class="flex-shrink-0 p-3 lg:p-4 border-t border-gray-200 dark:border-gray-700 pb-safe">
+            <div class="flex items-center gap-2 lg:gap-3 p-2 lg:p-3 rounded-xl bg-gradient-to-r from-gray-50 to-gray-100 dark:from-gray-700/50 dark:to-gray-700/30">
                 <div class="flex-shrink-0">
-                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/25">
-                        <?php echo dofs_icon('tasks', 'w-5 h-5 text-white'); ?>
+                    <div class="w-8 h-8 lg:w-10 lg:h-10 rounded-lg lg:rounded-xl bg-gradient-to-br from-green-400 to-green-600 flex items-center justify-center shadow-lg shadow-green-500/25">
+                        <?php echo dofs_icon('tasks', 'w-4 h-4 lg:w-5 lg:h-5 text-white'); ?>
                     </div>
                 </div>
                 <div class="flex-1 min-w-0">
-                    <p class="text-sm font-medium text-gray-900 dark:text-white">
+                    <p class="text-xs lg:text-sm font-medium text-gray-900 dark:text-white">
                         <?php esc_html_e('System Status', 'dofs-theme'); ?>
                     </p>
                     <p class="text-xs text-green-600 dark:text-green-400 flex items-center gap-1">
