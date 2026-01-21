@@ -351,6 +351,205 @@ function dofs_body_classes($classes) {
 add_filter('body_class', 'dofs_body_classes');
 
 /**
+ * Get current section based on URL
+ * Returns section slug if on a section page, false otherwise
+ */
+function dofs_get_current_section(): ?array {
+    $sections = dofs_get_section_definitions();
+    $current_url = trailingslashit($_SERVER['REQUEST_URI']);
+
+    foreach ($sections as $slug => $section) {
+        $section_path = '/' . $slug . '/';
+        if (strpos($current_url, $section_path) === 0 || $current_url === $section_path) {
+            return array_merge(['slug' => $slug], $section);
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Get section definitions with their sub-navigation items
+ * This can be filtered to add/modify sections
+ */
+function dofs_get_section_definitions(): array {
+    $sections = [
+        'crm' => [
+            'title' => __('CRM', 'dofs-theme'),
+            'icon' => 'users',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/crm/'), 'slug' => 'crm'],
+                ['title' => __('All Customers', 'dofs-theme'), 'url' => home_url('/crm/customers/'), 'slug' => 'customers'],
+                ['title' => __('New Customer', 'dofs-theme'), 'url' => home_url('/crm/new-customer/'), 'slug' => 'new-customer'],
+                ['title' => __('New Entry', 'dofs-theme'), 'url' => home_url('/crm/new-entry/'), 'slug' => 'new-entry'],
+                ['title' => __('New Invoice', 'dofs-theme'), 'url' => home_url('/crm/new-invoice/'), 'slug' => 'new-invoice'],
+            ],
+        ],
+        'sales' => [
+            'title' => __('Sales & Orders', 'dofs-theme'),
+            'icon' => 'chart',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/sales/'), 'slug' => 'sales'],
+                ['title' => __('All Orders', 'dofs-theme'), 'url' => home_url('/sales/orders/'), 'slug' => 'orders'],
+                ['title' => __('Inbox', 'dofs-theme'), 'url' => home_url('/sales/inbox/'), 'slug' => 'inbox'],
+                ['title' => __('My Customers', 'dofs-theme'), 'url' => home_url('/sales/my-customers/'), 'slug' => 'my-customers'],
+                ['title' => __('Delivery Confirmation', 'dofs-theme'), 'url' => home_url('/sales/delivery-confirmation/'), 'slug' => 'delivery-confirmation'],
+            ],
+        ],
+        'measurements' => [
+            'title' => __('Measurements', 'dofs-theme'),
+            'icon' => 'ruler',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/measurements/'), 'slug' => 'measurements'],
+                ['title' => __('New Measurements', 'dofs-theme'), 'url' => home_url('/measurements/new/'), 'slug' => 'new'],
+                ['title' => __('On Hold', 'dofs-theme'), 'url' => home_url('/measurements/on-hold/'), 'slug' => 'on-hold'],
+                ['title' => __('Returned', 'dofs-theme'), 'url' => home_url('/measurements/returned/'), 'slug' => 'returned'],
+            ],
+        ],
+        'installation' => [
+            'title' => __('Installation', 'dofs-theme'),
+            'icon' => 'wrench',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/installation/'), 'slug' => 'installation'],
+                ['title' => __('New Jobs', 'dofs-theme'), 'url' => home_url('/installation/new/'), 'slug' => 'new'],
+                ['title' => __('On Hold', 'dofs-theme'), 'url' => home_url('/installation/on-hold/'), 'slug' => 'on-hold'],
+                ['title' => __('Loading', 'dofs-theme'), 'url' => home_url('/installation/loading/'), 'slug' => 'loading'],
+                ['title' => __('Scheduling', 'dofs-theme'), 'url' => home_url('/installation/scheduling/'), 'slug' => 'scheduling'],
+                ['title' => __('All Jobs', 'dofs-theme'), 'url' => home_url('/installation/all/'), 'slug' => 'all'],
+            ],
+        ],
+        'design' => [
+            'title' => __('Design', 'dofs-theme'),
+            'icon' => 'pencil',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/design/'), 'slug' => 'design'],
+                ['title' => __('New Drawing Job', 'dofs-theme'), 'url' => home_url('/design/new/'), 'slug' => 'new'],
+                ['title' => __('Rejected Drawings', 'dofs-theme'), 'url' => home_url('/design/rejected/'), 'slug' => 'rejected'],
+            ],
+        ],
+        'production' => [
+            'title' => __('Production', 'dofs-theme'),
+            'icon' => 'factory',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/production/'), 'slug' => 'production'],
+                ['title' => __('Receiving', 'dofs-theme'), 'url' => home_url('/production/receiving/'), 'slug' => 'receiving'],
+                ['title' => __('Preparing', 'dofs-theme'), 'url' => home_url('/production/preparing/'), 'slug' => 'preparing'],
+                ['title' => __('Under Production', 'dofs-theme'), 'url' => home_url('/production/under-production/'), 'slug' => 'under-production'],
+                ['title' => __('Entry Updating', 'dofs-theme'), 'url' => home_url('/production/entry-updating/'), 'slug' => 'entry-updating'],
+                ['title' => __('Quality Rejection', 'dofs-theme'), 'url' => home_url('/production/quality-rejection/'), 'slug' => 'quality-rejection'],
+                ['title' => __('CNC Operations', 'dofs-theme'), 'url' => home_url('/production/cnc/'), 'slug' => 'cnc'],
+            ],
+        ],
+        'warehouse' => [
+            'title' => __('Warehouse', 'dofs-theme'),
+            'icon' => 'warehouse',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/warehouse/'), 'slug' => 'warehouse'],
+                ['title' => __('Order Receiving', 'dofs-theme'), 'url' => home_url('/warehouse/order-receiving/'), 'slug' => 'order-receiving'],
+                ['title' => __('Receiving', 'dofs-theme'), 'url' => home_url('/warehouse/receiving/'), 'slug' => 'receiving'],
+                ['title' => __('Order Loading', 'dofs-theme'), 'url' => home_url('/warehouse/order-loading/'), 'slug' => 'order-loading'],
+                ['title' => __('Quality Control', 'dofs-theme'), 'url' => home_url('/warehouse/quality-control/'), 'slug' => 'quality-control'],
+            ],
+        ],
+        'logistics' => [
+            'title' => __('Logistics', 'dofs-theme'),
+            'icon' => 'truck',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/logistics/'), 'slug' => 'logistics'],
+                ['title' => __('Goods Delivery', 'dofs-theme'), 'url' => home_url('/logistics/delivery/'), 'slug' => 'delivery'],
+            ],
+        ],
+        'projects' => [
+            'title' => __('Projects', 'dofs-theme'),
+            'icon' => 'grid',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/projects/'), 'slug' => 'projects'],
+                ['title' => __('All Projects', 'dofs-theme'), 'url' => home_url('/projects/all/'), 'slug' => 'all'],
+                ['title' => __('New Project', 'dofs-theme'), 'url' => home_url('/projects/new/'), 'slug' => 'new'],
+                ['title' => __('Project Drawings', 'dofs-theme'), 'url' => home_url('/projects/drawings/'), 'slug' => 'drawings'],
+                ['title' => __('Manufacturing', 'dofs-theme'), 'url' => home_url('/projects/manufacturing/'), 'slug' => 'manufacturing'],
+                ['title' => __('Delivery & Preparing', 'dofs-theme'), 'url' => home_url('/projects/delivery/'), 'slug' => 'delivery'],
+            ],
+        ],
+        'maintenance' => [
+            'title' => __('Maintenance', 'dofs-theme'),
+            'icon' => 'tool',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/maintenance/'), 'slug' => 'maintenance'],
+                ['title' => __('All Requests', 'dofs-theme'), 'url' => home_url('/maintenance/all/'), 'slug' => 'all'],
+                ['title' => __('New Request', 'dofs-theme'), 'url' => home_url('/maintenance/new/'), 'slug' => 'new'],
+                ['title' => __('Jobs', 'dofs-theme'), 'url' => home_url('/maintenance/jobs/'), 'slug' => 'jobs'],
+            ],
+        ],
+        'reports' => [
+            'title' => __('Reports & Analytics', 'dofs-theme'),
+            'icon' => 'chart-bar',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/reports/'), 'slug' => 'reports'],
+                ['title' => __('Sales Reports', 'dofs-theme'), 'url' => home_url('/reports/sales/'), 'slug' => 'sales'],
+                ['title' => __('Order Reports', 'dofs-theme'), 'url' => home_url('/reports/orders/'), 'slug' => 'orders'],
+                ['title' => __('Production Reports', 'dofs-theme'), 'url' => home_url('/reports/production/'), 'slug' => 'production'],
+                ['title' => __('Custom Reports', 'dofs-theme'), 'url' => home_url('/reports/custom/'), 'slug' => 'custom'],
+            ],
+        ],
+        'admin' => [
+            'title' => __('Administration', 'dofs-theme'),
+            'icon' => 'settings',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/admin/'), 'slug' => 'admin'],
+                ['title' => __('Documents Library', 'dofs-theme'), 'url' => home_url('/admin/documents/'), 'slug' => 'documents'],
+                ['title' => __('Delayed Entry', 'dofs-theme'), 'url' => home_url('/admin/delayed-entry/'), 'slug' => 'delayed-entry'],
+                ['title' => __('DOFS Monitoring', 'dofs-theme'), 'url' => home_url('/admin/monitoring/'), 'slug' => 'monitoring'],
+                ['title' => __('Installation Evaluation', 'dofs-theme'), 'url' => home_url('/admin/evaluation/'), 'slug' => 'evaluation'],
+            ],
+        ],
+        'hr' => [
+            'title' => __('Human Resources', 'dofs-theme'),
+            'icon' => 'user',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/hr/'), 'slug' => 'hr'],
+                ['title' => __('My HR', 'dofs-theme'), 'url' => home_url('/my-hr/'), 'slug' => 'my-hr'],
+                ['title' => __('My Team', 'dofs-theme'), 'url' => home_url('/my-team/'), 'slug' => 'my-team'],
+            ],
+        ],
+    ];
+
+    return apply_filters('dofs_section_definitions', $sections);
+}
+
+/**
+ * Render sub-navigation bar for current section
+ */
+function dofs_render_subnav(): void {
+    $section = dofs_get_current_section();
+
+    if (!$section || empty($section['items'])) {
+        return;
+    }
+
+    $current_url = trailingslashit($_SERVER['REQUEST_URI']);
+    ?>
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6">
+        <div class="flex items-center gap-1 overflow-x-auto scrollbar-hide -mb-px">
+            <?php foreach ($section['items'] as $item):
+                $item_url = trailingslashit(wp_parse_url($item['url'], PHP_URL_PATH));
+                $is_active = ($current_url === $item_url);
+            ?>
+            <a
+                href="<?php echo esc_url($item['url']); ?>"
+                class="flex-shrink-0 px-4 py-3 text-sm font-medium border-b-2 transition-colors <?php echo $is_active
+                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'; ?>"
+            >
+                <?php echo esc_html($item['title']); ?>
+            </a>
+            <?php endforeach; ?>
+        </div>
+    </nav>
+    <?php
+}
+
+/**
  * Override WordPress admin bar margin on html element
  * WordPress adds margin-top: 32px to html which we need to remove
  */

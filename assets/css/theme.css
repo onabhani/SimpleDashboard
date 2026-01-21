@@ -932,3 +932,17 @@ html.admin-bar body {
     border-color: #3b82f6;
     color: #fff;
 }
+
+/* Hide scrollbar but keep functionality */
+.scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+.scrollbar-hide::-webkit-scrollbar {
+    display: none;
+}
+
+/* Sub-navigation tab styling */
+.-mb-px {
+    margin-bottom: -1px;
+}
