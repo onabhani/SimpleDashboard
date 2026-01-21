@@ -49,18 +49,20 @@ get_sidebar();
         </div>
 
         <!-- Settings Form -->
-        <form id="settings-form" method="post" class="space-y-6">
+        <form id="settings-form" method="post" class="space-y-8">
             <?php wp_nonce_field('dofs_save_settings', 'dofs_settings_nonce'); ?>
 
             <!-- Display Preferences -->
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <?php echo dofs_icon('sun', 'w-5 h-5 text-amber-500'); ?>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center">
+                            <?php echo dofs_icon('sun', 'w-5 h-5 text-amber-600 dark:text-amber-400'); ?>
+                        </div>
                         <?php esc_html_e('Display Preferences', 'dofs-theme'); ?>
                     </h2>
                 </div>
-                <div class="p-6 space-y-6">
+                <div class="p-4 sm:p-6 space-y-6">
                     <!-- Theme -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
                         <label class="text-sm font-medium text-gray-700 dark:text-gray-300 pt-2">
@@ -133,12 +135,14 @@ get_sidebar();
             <!-- Notification Settings -->
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <?php echo dofs_icon('bell', 'w-5 h-5 text-red-500'); ?>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-500/20 flex items-center justify-center">
+                            <?php echo dofs_icon('bell', 'w-5 h-5 text-red-600 dark:text-red-400'); ?>
+                        </div>
                         <?php esc_html_e('Notification Settings', 'dofs-theme'); ?>
                     </h2>
                 </div>
-                <div class="p-6 space-y-6">
+                <div class="p-4 sm:p-6 space-y-6">
                     <!-- Email Notifications -->
                     <div class="flex items-center justify-between">
                         <div>
@@ -190,93 +194,99 @@ get_sidebar();
             <!-- Privacy & Security -->
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <svg class="w-5 h-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-500/20 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                            </svg>
+                        </div>
                         <?php esc_html_e('Privacy & Security', 'dofs-theme'); ?>
                     </h2>
                 </div>
-                <div class="p-6 space-y-4">
-                    <!-- Change Password -->
-                    <a href="<?php echo esc_url(admin_url('profile.php#password')); ?>" class="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
-                                </svg>
+                <div class="p-4 sm:p-6">
+                    <div class="space-y-3">
+                        <!-- Change Password -->
+                        <a href="<?php echo esc_url(admin_url('profile.php#password')); ?>" class="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-6 h-6 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-base font-semibold text-gray-900 dark:text-white"><?php esc_html_e('Change Password', 'dofs-theme'); ?></p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php esc_html_e('Update your account password', 'dofs-theme'); ?></p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white"><?php esc_html_e('Change Password', 'dofs-theme'); ?></p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400"><?php esc_html_e('Update your account password', 'dofs-theme'); ?></p>
-                            </div>
-                        </div>
-                        <?php echo dofs_icon('chevron-down', 'w-5 h-5 text-gray-400 -rotate-90 group-hover:translate-x-1 transition-transform'); ?>
-                    </a>
+                            <?php echo dofs_icon('chevron-down', 'w-5 h-5 text-gray-400 -rotate-90 group-hover:translate-x-1 transition-transform shrink-0'); ?>
+                        </a>
 
-                    <!-- Two-Factor Authentication -->
-                    <div class="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-600">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
-                                </svg>
+                        <!-- Two-Factor Authentication -->
+                        <div class="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-purple-100 dark:bg-purple-500/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-6 h-6 text-purple-600 dark:text-purple-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-base font-semibold text-gray-900 dark:text-white"><?php esc_html_e('Two-Factor Authentication', 'dofs-theme'); ?></p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php esc_html_e('Add an extra layer of security', 'dofs-theme'); ?></p>
+                                </div>
                             </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white"><?php esc_html_e('Two-Factor Authentication', 'dofs-theme'); ?></p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400"><?php esc_html_e('Add an extra layer of security', 'dofs-theme'); ?></p>
-                            </div>
+                            <span class="px-3 py-1.5 text-xs font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 shrink-0">
+                                <?php esc_html_e('Coming Soon', 'dofs-theme'); ?>
+                            </span>
                         </div>
-                        <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
-                            <?php esc_html_e('Coming Soon', 'dofs-theme'); ?>
-                        </span>
+
+                        <!-- Active Sessions -->
+                        <a href="#active-sessions" class="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group" id="view-sessions-btn">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-6 h-6 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-base font-semibold text-gray-900 dark:text-white"><?php esc_html_e('Active Sessions', 'dofs-theme'); ?></p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php esc_html_e('Manage your active login sessions', 'dofs-theme'); ?></p>
+                                </div>
+                            </div>
+                            <?php echo dofs_icon('chevron-down', 'w-5 h-5 text-gray-400 -rotate-90 group-hover:translate-x-1 transition-transform shrink-0'); ?>
+                        </a>
+
+                        <!-- Activity Log -->
+                        <a href="<?php echo esc_url(home_url('/activity-log/')); ?>" class="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
+                            <div class="flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-xl bg-cyan-100 dark:bg-cyan-500/20 flex items-center justify-center shrink-0">
+                                    <svg class="w-6 h-6 text-cyan-600 dark:text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                    </svg>
+                                </div>
+                                <div>
+                                    <p class="text-base font-semibold text-gray-900 dark:text-white"><?php esc_html_e('Activity Log', 'dofs-theme'); ?></p>
+                                    <p class="text-sm text-gray-500 dark:text-gray-400"><?php esc_html_e('View your recent account activity', 'dofs-theme'); ?></p>
+                                </div>
+                            </div>
+                            <?php echo dofs_icon('chevron-down', 'w-5 h-5 text-gray-400 -rotate-90 group-hover:translate-x-1 transition-transform shrink-0'); ?>
+                        </a>
                     </div>
-
-                    <!-- Active Sessions -->
-                    <a href="#active-sessions" class="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group" id="view-sessions-btn">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white"><?php esc_html_e('Active Sessions', 'dofs-theme'); ?></p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400"><?php esc_html_e('Manage your active login sessions', 'dofs-theme'); ?></p>
-                            </div>
-                        </div>
-                        <?php echo dofs_icon('chevron-down', 'w-5 h-5 text-gray-400 -rotate-90 group-hover:translate-x-1 transition-transform'); ?>
-                    </a>
-
-                    <!-- Activity Log -->
-                    <a href="<?php echo esc_url(home_url('/activity-log/')); ?>" class="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-lg bg-cyan-100 dark:bg-cyan-900/30 flex items-center justify-center">
-                                <svg class="w-5 h-5 text-cyan-600 dark:text-cyan-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                                </svg>
-                            </div>
-                            <div>
-                                <p class="text-sm font-medium text-gray-900 dark:text-white"><?php esc_html_e('Activity Log', 'dofs-theme'); ?></p>
-                                <p class="text-xs text-gray-500 dark:text-gray-400"><?php esc_html_e('View your recent account activity', 'dofs-theme'); ?></p>
-                            </div>
-                        </div>
-                        <?php echo dofs_icon('chevron-down', 'w-5 h-5 text-gray-400 -rotate-90 group-hover:translate-x-1 transition-transform'); ?>
-                    </a>
                 </div>
             </section>
 
             <!-- Regional Settings -->
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <svg class="w-5 h-5 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center">
+                            <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M3.055 11H5a2 2 0 012 2v1a2 2 0 002 2 2 2 0 012 2v2.945M8 3.935V5.5A2.5 2.5 0 0010.5 8h.5a2 2 0 012 2 2 2 0 104 0 2 2 0 012-2h1.064M15 20.488V18a2 2 0 012-2h3.064M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </div>
                         <?php esc_html_e('Regional Settings', 'dofs-theme'); ?>
                     </h2>
                 </div>
-                <div class="p-6 space-y-6">
+                <div class="p-4 sm:p-6 space-y-6">
                     <!-- Timezone -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
                         <label for="timezone" class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -330,12 +340,14 @@ get_sidebar();
             <!-- Quick Access Customization -->
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
                 <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
-                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                        <?php echo dofs_icon('grid', 'w-5 h-5 text-pink-500'); ?>
+                    <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
+                        <div class="w-8 h-8 rounded-lg bg-pink-100 dark:bg-pink-500/20 flex items-center justify-center">
+                            <?php echo dofs_icon('grid', 'w-5 h-5 text-pink-600 dark:text-pink-400'); ?>
+                        </div>
                         <?php esc_html_e('Quick Access Customization', 'dofs-theme'); ?>
                     </h2>
                 </div>
-                <div class="p-6">
+                <div class="p-4 sm:p-6">
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
                         <?php esc_html_e('Choose which cards to show on your dashboard Quick Access section.', 'dofs-theme'); ?>
                     </p>
@@ -366,11 +378,11 @@ get_sidebar();
             </section>
 
             <!-- Save Button -->
-            <div class="flex justify-end gap-3">
-                <button type="button" onclick="window.location.reload()" class="px-6 py-2.5 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
+            <div class="flex justify-end gap-4 pt-4 pb-6">
+                <button type="button" onclick="window.location.reload()" class="px-8 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
                     <?php esc_html_e('Cancel', 'dofs-theme'); ?>
                 </button>
-                <button type="submit" class="px-6 py-2.5 text-sm font-medium text-white bg-primary-600 rounded-xl hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-800 transition-colors">
+                <button type="submit" class="px-8 py-3 text-sm font-medium text-white bg-primary-600 rounded-xl hover:bg-primary-700 focus:ring-4 focus:ring-primary-300 dark:focus:ring-primary-800 transition-colors shadow-sm">
                     <?php esc_html_e('Save Changes', 'dofs-theme'); ?>
                 </button>
             </div>
