@@ -42,6 +42,7 @@ function dofs_theme_setup() {
         'dofs_topbar' => __('Dashboard Topbar Menu', 'dofs-theme'),
         'dofs_sidebar' => __('Dashboard Sidebar Menu', 'dofs-theme'),
         'dofs_user' => __('User Dropdown Menu', 'dofs-theme'),
+        'dofs_services' => __('Services App Launcher', 'dofs-theme'),
     ]);
 }
 add_action('after_setup_theme', 'dofs_theme_setup');
@@ -202,59 +203,54 @@ function dofs_get_menu_icon($item): string {
 }
 
 /**
- * Default sidebar menu
+ * Default sidebar menu - New unified structure
  */
 function dofs_get_default_sidebar_menu(): array {
     return [
         [
             'section' => 'MAIN',
             'items' => [
-                ['id' => 1, 'title' => 'Dashboard', 'url' => home_url('/'), 'icon' => 'home', 'current' => is_front_page()],
-                ['id' => 2, 'title' => 'Quick Access', 'url' => '#quick-access', 'icon' => 'grid'],
+                ['id' => 1, 'title' => __('Dashboard', 'dofs-theme'), 'url' => home_url('/'), 'icon' => 'home', 'current' => is_front_page()],
             ],
         ],
         [
-            'section' => 'SALES & ORDERS',
+            'section' => 'BUSINESS',
             'items' => [
-                ['id' => 3, 'title' => 'Sales Overview', 'url' => home_url('/sales/'), 'icon' => 'chart'],
-                ['id' => 4, 'title' => 'Orders', 'url' => home_url('/orders/'), 'icon' => 'cart'],
-                ['id' => 5, 'title' => 'Customers', 'url' => home_url('/customers/'), 'icon' => 'users'],
+                ['id' => 2, 'title' => __('CRM', 'dofs-theme'), 'url' => home_url('/crm/'), 'icon' => 'users'],
+                ['id' => 3, 'title' => __('Sales & Orders', 'dofs-theme'), 'url' => home_url('/sales/'), 'icon' => 'chart'],
             ],
         ],
         [
-            'section' => 'INVENTORY',
+            'section' => 'OPERATIONS',
             'items' => [
-                ['id' => 6, 'title' => 'Products', 'url' => home_url('/products/'), 'icon' => 'cube'],
-                ['id' => 7, 'title' => 'Stock Levels', 'url' => home_url('/stock/'), 'icon' => 'archive'],
+                ['id' => 4, 'title' => __('Measurements', 'dofs-theme'), 'url' => home_url('/measurements/'), 'icon' => 'ruler'],
+                ['id' => 5, 'title' => __('Installation', 'dofs-theme'), 'url' => home_url('/installation/'), 'icon' => 'wrench'],
+                ['id' => 6, 'title' => __('Design', 'dofs-theme'), 'url' => home_url('/design/'), 'icon' => 'pencil'],
+                ['id' => 7, 'title' => __('Production', 'dofs-theme'), 'url' => home_url('/production/'), 'icon' => 'factory'],
+                ['id' => 8, 'title' => __('Warehouse', 'dofs-theme'), 'url' => home_url('/warehouse/'), 'icon' => 'warehouse'],
+                ['id' => 9, 'title' => __('Logistics', 'dofs-theme'), 'url' => home_url('/logistics/'), 'icon' => 'truck'],
             ],
         ],
         [
-            'section' => 'HR',
+            'section' => 'MANAGEMENT',
             'items' => [
-                ['id' => 8, 'title' => 'HR Overview', 'url' => home_url('/hr/'), 'icon' => 'team'],
-                ['id' => 9, 'title' => 'My HR', 'url' => home_url('/my-hr/'), 'icon' => 'user'],
-                ['id' => 10, 'title' => 'My Team', 'url' => home_url('/my-team/'), 'icon' => 'users'],
-                ['id' => 11, 'title' => 'HR Actions', 'url' => home_url('/hr-actions/'), 'icon' => 'clipboard'],
+                ['id' => 10, 'title' => __('Projects', 'dofs-theme'), 'url' => home_url('/projects/'), 'icon' => 'grid'],
+                ['id' => 11, 'title' => __('Maintenance', 'dofs-theme'), 'url' => home_url('/maintenance/'), 'icon' => 'tool'],
+                ['id' => 12, 'title' => __('Reports & Analytics', 'dofs-theme'), 'url' => home_url('/reports/'), 'icon' => 'chart-bar'],
             ],
         ],
         [
-            'section' => 'REPORTS & DATA',
+            'section' => 'ADMINISTRATION',
             'items' => [
-                ['id' => 12, 'title' => 'Reports', 'url' => home_url('/reports/'), 'icon' => 'document'],
-                ['id' => 13, 'title' => 'Analytics', 'url' => home_url('/analytics/'), 'icon' => 'trending'],
-            ],
-        ],
-        [
-            'section' => 'WORKFLOWS',
-            'items' => [
-                ['id' => 14, 'title' => 'My Tasks', 'url' => home_url('/tasks/'), 'icon' => 'tasks'],
+                ['id' => 13, 'title' => __('Administration', 'dofs-theme'), 'url' => home_url('/admin/'), 'icon' => 'settings'],
+                ['id' => 14, 'title' => __('Human Resources', 'dofs-theme'), 'url' => home_url('/hr/'), 'icon' => 'user'],
             ],
         ],
         [
             'section' => 'SETTINGS',
             'items' => [
-                ['id' => 15, 'title' => 'Settings', 'url' => home_url('/settings/'), 'icon' => 'settings'],
-                ['id' => 16, 'title' => 'Help', 'url' => home_url('/help/'), 'icon' => 'help'],
+                ['id' => 15, 'title' => __('Settings', 'dofs-theme'), 'url' => home_url('/settings/'), 'icon' => 'cog'],
+                ['id' => 16, 'title' => __('Help', 'dofs-theme'), 'url' => home_url('/help/'), 'icon' => 'help'],
             ],
         ],
     ];
@@ -295,6 +291,52 @@ function dofs_get_topbar_menu(): array {
 }
 
 /**
+ * Get services menu items for app launcher
+ */
+function dofs_get_services_menu(): array {
+    $locations = get_nav_menu_locations();
+
+    if (!isset($locations['dofs_services'])) {
+        return dofs_get_default_services_menu();
+    }
+
+    $menu = wp_get_nav_menu_object($locations['dofs_services']);
+
+    if (!$menu) {
+        return dofs_get_default_services_menu();
+    }
+
+    $items = wp_get_nav_menu_items($menu->term_id);
+    $services = [];
+
+    if ($items) {
+        foreach ($items as $item) {
+            $services[] = [
+                'id' => $item->ID,
+                'title' => $item->title,
+                'url' => $item->url,
+                'icon' => dofs_get_menu_icon($item),
+                'target' => '_blank',
+                'image' => get_post_meta($item->ID, '_menu_item_image', true) ?: '',
+            ];
+        }
+    }
+
+    return !empty($services) ? $services : dofs_get_default_services_menu();
+}
+
+/**
+ * Default services menu for app launcher
+ */
+function dofs_get_default_services_menu(): array {
+    return [
+        ['id' => 1, 'title' => __('Odoo ERP', 'dofs-theme'), 'url' => '#', 'icon' => 'external-link'],
+        ['id' => 2, 'title' => __('Google Drive', 'dofs-theme'), 'url' => '#', 'icon' => 'external-link'],
+        ['id' => 3, 'title' => __('Email', 'dofs-theme'), 'url' => '#', 'icon' => 'external-link'],
+    ];
+}
+
+/**
  * Add body classes
  */
 function dofs_body_classes($classes) {
@@ -307,6 +349,221 @@ function dofs_body_classes($classes) {
     return $classes;
 }
 add_filter('body_class', 'dofs_body_classes');
+
+/**
+ * Get current section based on URL
+ * Returns section slug if on a section page, false otherwise
+ */
+function dofs_get_current_section(): ?array {
+    $sections = dofs_get_section_definitions();
+    $current_url = trailingslashit($_SERVER['REQUEST_URI']);
+
+    foreach ($sections as $slug => $section) {
+        $section_path = '/' . $slug . '/';
+        if (strpos($current_url, $section_path) === 0 || $current_url === $section_path) {
+            return array_merge(['slug' => $slug], $section);
+        }
+    }
+
+    return null;
+}
+
+/**
+ * Get section definitions with their sub-navigation items
+ * This can be filtered to add/modify sections
+ */
+function dofs_get_section_definitions(): array {
+    $sections = [
+        'crm' => [
+            'title' => __('CRM', 'dofs-theme'),
+            'icon' => 'users',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/crm/'), 'slug' => 'crm'],
+                ['title' => __('All Customers', 'dofs-theme'), 'url' => home_url('/crm/customers/'), 'slug' => 'customers'],
+                ['title' => __('New Customer', 'dofs-theme'), 'url' => home_url('/crm/new-customer/'), 'slug' => 'new-customer'],
+                ['title' => __('New Entry', 'dofs-theme'), 'url' => home_url('/crm/new-entry/'), 'slug' => 'new-entry'],
+                ['title' => __('New Invoice', 'dofs-theme'), 'url' => home_url('/crm/new-invoice/'), 'slug' => 'new-invoice'],
+            ],
+        ],
+        'sales' => [
+            'title' => __('Sales & Orders', 'dofs-theme'),
+            'icon' => 'chart',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/sales/'), 'slug' => 'sales'],
+                ['title' => __('All Orders', 'dofs-theme'), 'url' => home_url('/sales/orders/'), 'slug' => 'orders'],
+                ['title' => __('Inbox', 'dofs-theme'), 'url' => home_url('/sales/inbox/'), 'slug' => 'inbox'],
+                ['title' => __('My Customers', 'dofs-theme'), 'url' => home_url('/sales/my-customers/'), 'slug' => 'my-customers'],
+                ['title' => __('Delivery Confirmation', 'dofs-theme'), 'url' => home_url('/sales/delivery-confirmation/'), 'slug' => 'delivery-confirmation'],
+            ],
+        ],
+        'measurements' => [
+            'title' => __('Measurements', 'dofs-theme'),
+            'icon' => 'ruler',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/measurements/'), 'slug' => 'measurements'],
+                ['title' => __('New Measurements', 'dofs-theme'), 'url' => home_url('/measurements/new/'), 'slug' => 'new'],
+                ['title' => __('On Hold', 'dofs-theme'), 'url' => home_url('/measurements/on-hold/'), 'slug' => 'on-hold'],
+                ['title' => __('Returned', 'dofs-theme'), 'url' => home_url('/measurements/returned/'), 'slug' => 'returned'],
+            ],
+        ],
+        'installation' => [
+            'title' => __('Installation', 'dofs-theme'),
+            'icon' => 'wrench',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/installation/'), 'slug' => 'installation'],
+                ['title' => __('New Jobs', 'dofs-theme'), 'url' => home_url('/installation/new/'), 'slug' => 'new'],
+                ['title' => __('On Hold', 'dofs-theme'), 'url' => home_url('/installation/on-hold/'), 'slug' => 'on-hold'],
+                ['title' => __('Loading', 'dofs-theme'), 'url' => home_url('/installation/loading/'), 'slug' => 'loading'],
+                ['title' => __('Scheduling', 'dofs-theme'), 'url' => home_url('/installation/scheduling/'), 'slug' => 'scheduling'],
+                ['title' => __('All Jobs', 'dofs-theme'), 'url' => home_url('/installation/all/'), 'slug' => 'all'],
+            ],
+        ],
+        'design' => [
+            'title' => __('Design', 'dofs-theme'),
+            'icon' => 'pencil',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/design/'), 'slug' => 'design'],
+                ['title' => __('New Drawing Job', 'dofs-theme'), 'url' => home_url('/design/new/'), 'slug' => 'new'],
+                ['title' => __('Rejected Drawings', 'dofs-theme'), 'url' => home_url('/design/rejected/'), 'slug' => 'rejected'],
+            ],
+        ],
+        'production' => [
+            'title' => __('Production', 'dofs-theme'),
+            'icon' => 'factory',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/production/'), 'slug' => 'production'],
+                ['title' => __('Receiving', 'dofs-theme'), 'url' => home_url('/production/receiving/'), 'slug' => 'receiving'],
+                ['title' => __('Preparing', 'dofs-theme'), 'url' => home_url('/production/preparing/'), 'slug' => 'preparing'],
+                ['title' => __('Under Production', 'dofs-theme'), 'url' => home_url('/production/under-production/'), 'slug' => 'under-production'],
+                ['title' => __('Entry Updating', 'dofs-theme'), 'url' => home_url('/production/entry-updating/'), 'slug' => 'entry-updating'],
+                ['title' => __('Quality Rejection', 'dofs-theme'), 'url' => home_url('/production/quality-rejection/'), 'slug' => 'quality-rejection'],
+                ['title' => __('CNC Operations', 'dofs-theme'), 'url' => home_url('/production/cnc/'), 'slug' => 'cnc'],
+            ],
+        ],
+        'warehouse' => [
+            'title' => __('Warehouse', 'dofs-theme'),
+            'icon' => 'warehouse',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/warehouse/'), 'slug' => 'warehouse'],
+                ['title' => __('Order Receiving', 'dofs-theme'), 'url' => home_url('/warehouse/order-receiving/'), 'slug' => 'order-receiving'],
+                ['title' => __('Receiving', 'dofs-theme'), 'url' => home_url('/warehouse/receiving/'), 'slug' => 'receiving'],
+                ['title' => __('Order Loading', 'dofs-theme'), 'url' => home_url('/warehouse/order-loading/'), 'slug' => 'order-loading'],
+                ['title' => __('Quality Control', 'dofs-theme'), 'url' => home_url('/warehouse/quality-control/'), 'slug' => 'quality-control'],
+            ],
+        ],
+        'logistics' => [
+            'title' => __('Logistics', 'dofs-theme'),
+            'icon' => 'truck',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/logistics/'), 'slug' => 'logistics'],
+                ['title' => __('Goods Delivery', 'dofs-theme'), 'url' => home_url('/logistics/delivery/'), 'slug' => 'delivery'],
+            ],
+        ],
+        'projects' => [
+            'title' => __('Projects', 'dofs-theme'),
+            'icon' => 'grid',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/projects/'), 'slug' => 'projects'],
+                ['title' => __('All Projects', 'dofs-theme'), 'url' => home_url('/projects/all/'), 'slug' => 'all'],
+                ['title' => __('New Project', 'dofs-theme'), 'url' => home_url('/projects/new/'), 'slug' => 'new'],
+                ['title' => __('Project Drawings', 'dofs-theme'), 'url' => home_url('/projects/drawings/'), 'slug' => 'drawings'],
+                ['title' => __('Manufacturing', 'dofs-theme'), 'url' => home_url('/projects/manufacturing/'), 'slug' => 'manufacturing'],
+                ['title' => __('Delivery & Preparing', 'dofs-theme'), 'url' => home_url('/projects/delivery/'), 'slug' => 'delivery'],
+            ],
+        ],
+        'maintenance' => [
+            'title' => __('Maintenance', 'dofs-theme'),
+            'icon' => 'tool',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/maintenance/'), 'slug' => 'maintenance'],
+                ['title' => __('All Requests', 'dofs-theme'), 'url' => home_url('/maintenance/all/'), 'slug' => 'all'],
+                ['title' => __('New Request', 'dofs-theme'), 'url' => home_url('/maintenance/new/'), 'slug' => 'new'],
+                ['title' => __('Jobs', 'dofs-theme'), 'url' => home_url('/maintenance/jobs/'), 'slug' => 'jobs'],
+            ],
+        ],
+        'reports' => [
+            'title' => __('Reports & Analytics', 'dofs-theme'),
+            'icon' => 'chart-bar',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/reports/'), 'slug' => 'reports'],
+                ['title' => __('Sales Reports', 'dofs-theme'), 'url' => home_url('/reports/sales/'), 'slug' => 'sales'],
+                ['title' => __('Order Reports', 'dofs-theme'), 'url' => home_url('/reports/orders/'), 'slug' => 'orders'],
+                ['title' => __('Production Reports', 'dofs-theme'), 'url' => home_url('/reports/production/'), 'slug' => 'production'],
+                ['title' => __('Custom Reports', 'dofs-theme'), 'url' => home_url('/reports/custom/'), 'slug' => 'custom'],
+            ],
+        ],
+        'admin' => [
+            'title' => __('Administration', 'dofs-theme'),
+            'icon' => 'settings',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/admin/'), 'slug' => 'admin'],
+                ['title' => __('Documents Library', 'dofs-theme'), 'url' => home_url('/admin/documents/'), 'slug' => 'documents'],
+                ['title' => __('Delayed Entry', 'dofs-theme'), 'url' => home_url('/admin/delayed-entry/'), 'slug' => 'delayed-entry'],
+                ['title' => __('DOFS Monitoring', 'dofs-theme'), 'url' => home_url('/admin/monitoring/'), 'slug' => 'monitoring'],
+                ['title' => __('Installation Evaluation', 'dofs-theme'), 'url' => home_url('/admin/evaluation/'), 'slug' => 'evaluation'],
+            ],
+        ],
+        'hr' => [
+            'title' => __('Human Resources', 'dofs-theme'),
+            'icon' => 'user',
+            'items' => [
+                ['title' => __('Overview', 'dofs-theme'), 'url' => home_url('/hr/'), 'slug' => 'hr'],
+                ['title' => __('My HR', 'dofs-theme'), 'url' => home_url('/my-hr/'), 'slug' => 'my-hr'],
+                ['title' => __('My Team', 'dofs-theme'), 'url' => home_url('/my-team/'), 'slug' => 'my-team'],
+            ],
+        ],
+    ];
+
+    return apply_filters('dofs_section_definitions', $sections);
+}
+
+/**
+ * Render sub-navigation bar for current section
+ */
+function dofs_render_subnav(): void {
+    $section = dofs_get_current_section();
+
+    if (!$section || empty($section['items'])) {
+        return;
+    }
+
+    $current_url = trailingslashit($_SERVER['REQUEST_URI']);
+    ?>
+    <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6">
+        <div class="flex items-center gap-1 overflow-x-auto scrollbar-hide -mb-px">
+            <?php foreach ($section['items'] as $item):
+                $item_url = trailingslashit(wp_parse_url($item['url'], PHP_URL_PATH));
+                $is_active = ($current_url === $item_url);
+            ?>
+            <a
+                href="<?php echo esc_url($item['url']); ?>"
+                class="flex-shrink-0 px-4 py-3 text-sm font-medium border-b-2 transition-colors <?php echo $is_active
+                    ? 'border-primary-500 text-primary-600 dark:text-primary-400'
+                    : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 hover:border-gray-300 dark:hover:border-gray-600'; ?>"
+            >
+                <?php echo esc_html($item['title']); ?>
+            </a>
+            <?php endforeach; ?>
+        </div>
+    </nav>
+    <?php
+}
+
+/**
+ * Override WordPress admin bar margin on html element
+ * WordPress adds margin-top: 32px to html which we need to remove
+ */
+function dofs_admin_bar_fix() {
+    if (is_admin_bar_showing()) {
+        ?>
+        <style id="dofs-admin-bar-fix">
+            html { margin-top: 0 !important; }
+            * html body { margin-top: 0 !important; }
+        </style>
+        <?php
+    }
+}
+add_action('wp_head', 'dofs_admin_bar_fix', 999);
 
 /**
  * SVG Icon helper function
@@ -336,6 +593,18 @@ function dofs_icon(string $name, string $class = 'w-5 h-5'): string {
         'logout' => '<path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />',
         'sun' => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />',
         'moon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />',
+        // New icons for unified menu
+        'ruler' => '<path stroke-linecap="round" stroke-linejoin="round" d="M6 2L2 6l14 14 4-4L6 2zm6.586 2.586l1.414 1.414M9.172 6l1.414 1.414M5.757 9.414l1.415 1.414" />',
+        'wrench' => '<path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />',
+        'pencil' => '<path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />',
+        'factory' => '<path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />',
+        'warehouse' => '<path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />',
+        'truck' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />',
+        'tool' => '<path stroke-linecap="round" stroke-linejoin="round" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />',
+        'chart-bar' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />',
+        'cog' => '<path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />',
+        'apps' => '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />',
+        'external-link' => '<path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />',
     ];
 
     $path = $icons[$name] ?? $icons['document'];
@@ -359,7 +628,7 @@ function dofs_load_dashboard_module() {
 add_action('after_setup_theme', 'dofs_load_dashboard_module');
 
 /**
- * Register dashboard capabilities on theme activation
+ * Register dashboard capabilities and create required pages on theme activation
  */
 function dofs_theme_activation() {
     $admin = get_role('administrator');
@@ -379,9 +648,51 @@ function dofs_theme_activation() {
         $admin->add_cap('sfs_hr.view_dashboard_manager');
     }
 
+    // Create required pages
+    dofs_create_required_pages();
+
     flush_rewrite_rules();
 }
 add_action('after_switch_theme', 'dofs_theme_activation');
+
+/**
+ * Create required pages (Settings, Help) if they don't exist
+ */
+function dofs_create_required_pages() {
+    $pages = [
+        [
+            'slug' => 'settings',
+            'title' => __('Settings', 'dofs-theme'),
+            'template' => 'page-settings.php',
+        ],
+        [
+            'slug' => 'help',
+            'title' => __('Help', 'dofs-theme'),
+            'template' => 'page-help.php',
+        ],
+    ];
+
+    foreach ($pages as $page_data) {
+        // Check if page exists
+        $existing = get_page_by_path($page_data['slug']);
+
+        if (!$existing) {
+            // Create the page
+            $page_id = wp_insert_post([
+                'post_title' => $page_data['title'],
+                'post_name' => $page_data['slug'],
+                'post_status' => 'publish',
+                'post_type' => 'page',
+                'post_content' => '',
+            ]);
+
+            // Set page template if specified
+            if ($page_id && !is_wp_error($page_id) && !empty($page_data['template'])) {
+                update_post_meta($page_id, '_wp_page_template', $page_data['template']);
+            }
+        }
+    }
+}
 
 /**
  * Handle AJAX settings save

@@ -49,12 +49,12 @@ get_sidebar();
                  * Each item: ['id', 'title', 'icon', 'url', 'gradient', 'shadow']
                  */
                 $quick_access = apply_filters('dofs_quick_access_items', [
-                    ['id' => 'sales', 'title' => __('Sales', 'dofs-theme'), 'icon' => 'chart', 'url' => home_url('/sales/'), 'gradient' => 'from-blue-500 to-blue-600', 'shadow' => 'shadow-blue-500/25'],
-                    ['id' => 'orders', 'title' => __('Orders', 'dofs-theme'), 'icon' => 'cart', 'url' => home_url('/orders/'), 'gradient' => 'from-purple-500 to-purple-600', 'shadow' => 'shadow-purple-500/25'],
-                    ['id' => 'hr', 'title' => __('HR', 'dofs-theme'), 'icon' => 'team', 'url' => home_url('/hr/'), 'gradient' => 'from-green-500 to-green-600', 'shadow' => 'shadow-green-500/25'],
-                    ['id' => 'reports', 'title' => __('Reports', 'dofs-theme'), 'icon' => 'document', 'url' => home_url('/reports/'), 'gradient' => 'from-orange-500 to-orange-600', 'shadow' => 'shadow-orange-500/25'],
-                    ['id' => 'inventory', 'title' => __('Inventory', 'dofs-theme'), 'icon' => 'cube', 'url' => home_url('/products/'), 'gradient' => 'from-pink-500 to-pink-600', 'shadow' => 'shadow-pink-500/25'],
-                    ['id' => 'customers', 'title' => __('Customers', 'dofs-theme'), 'icon' => 'users', 'url' => home_url('/customers/'), 'gradient' => 'from-cyan-500 to-cyan-600', 'shadow' => 'shadow-cyan-500/25'],
+                    ['id' => 'crm', 'title' => __('CRM', 'dofs-theme'), 'icon' => 'users', 'url' => home_url('/crm/'), 'gradient' => 'from-blue-500 to-blue-600', 'shadow' => 'shadow-blue-500/25'],
+                    ['id' => 'sales', 'title' => __('Sales & Orders', 'dofs-theme'), 'icon' => 'chart', 'url' => home_url('/sales/'), 'gradient' => 'from-purple-500 to-purple-600', 'shadow' => 'shadow-purple-500/25'],
+                    ['id' => 'production', 'title' => __('Production', 'dofs-theme'), 'icon' => 'factory', 'url' => home_url('/production/'), 'gradient' => 'from-orange-500 to-orange-600', 'shadow' => 'shadow-orange-500/25'],
+                    ['id' => 'warehouse', 'title' => __('Warehouse', 'dofs-theme'), 'icon' => 'warehouse', 'url' => home_url('/warehouse/'), 'gradient' => 'from-green-500 to-green-600', 'shadow' => 'shadow-green-500/25'],
+                    ['id' => 'projects', 'title' => __('Projects', 'dofs-theme'), 'icon' => 'grid', 'url' => home_url('/projects/'), 'gradient' => 'from-pink-500 to-pink-600', 'shadow' => 'shadow-pink-500/25'],
+                    ['id' => 'reports', 'title' => __('Reports', 'dofs-theme'), 'icon' => 'chart-bar', 'url' => home_url('/reports/'), 'gradient' => 'from-cyan-500 to-cyan-600', 'shadow' => 'shadow-cyan-500/25'],
                 ]);
 
                 // Filter out hidden items based on user settings
@@ -68,14 +68,41 @@ get_sidebar();
 
                 foreach ($quick_access as $item):
                 ?>
-                <a href="<?php echo esc_url($item['url']); ?>" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br <?php echo esc_attr($item['gradient']); ?> p-5 text-white shadow-lg <?php echo esc_attr($item['shadow']); ?> hover:scale-105 transition-transform duration-200 aspect-square flex flex-col justify-between">
+                <a href="<?php echo esc_url($item['url']); ?>" class="group relative overflow-hidden rounded-2xl bg-gradient-to-br <?php echo esc_attr($item['gradient']); ?> p-4 sm:p-5 text-white shadow-lg <?php echo esc_attr($item['shadow']); ?> hover:scale-105 transition-transform duration-200 min-h-[100px] sm:min-h-[120px] lg:aspect-square flex flex-col justify-between">
                     <div class="absolute inset-0 bg-white/10 opacity-0 group-hover:opacity-100 transition-opacity"></div>
                     <div class="relative">
-                        <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mb-3">
-                            <?php echo dofs_icon($item['icon'], 'w-6 h-6'); ?>
+                        <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white/20 flex items-center justify-center mb-2 sm:mb-3">
+                            <?php echo dofs_icon($item['icon'], 'w-5 h-5 sm:w-6 sm:h-6'); ?>
                         </div>
-                        <h3 class="font-semibold"><?php echo esc_html($item['title']); ?></h3>
+                        <h3 class="font-medium sm:font-semibold text-sm sm:text-base"><?php echo esc_html($item['title']); ?></h3>
                     </div>
+                </a>
+                <?php endforeach; ?>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section>
+            <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                <?php esc_html_e('Quick Actions', 'dofs-theme'); ?>
+            </h2>
+            <div class="flex flex-wrap gap-2">
+                <?php
+                $quick_actions = apply_filters('dofs_quick_actions', [
+                    ['title' => __('New Customer', 'dofs-theme'), 'url' => home_url('/crm/new-customer/'), 'icon' => 'users'],
+                    ['title' => __('New Entry', 'dofs-theme'), 'url' => home_url('/crm/new-entry/'), 'icon' => 'document'],
+                    ['title' => __('New Invoice', 'dofs-theme'), 'url' => home_url('/crm/new-invoice/'), 'icon' => 'cart'],
+                    ['title' => __('All Orders', 'dofs-theme'), 'url' => home_url('/sales/orders/'), 'icon' => 'chart'],
+                    ['title' => __('New Project', 'dofs-theme'), 'url' => home_url('/projects/new/'), 'icon' => 'grid'],
+                    ['title' => __('New Maintenance', 'dofs-theme'), 'url' => home_url('/maintenance/new/'), 'icon' => 'tool'],
+                    ['title' => __('View Reports', 'dofs-theme'), 'url' => home_url('/reports/'), 'icon' => 'chart-bar'],
+                ]);
+
+                foreach ($quick_actions as $action):
+                ?>
+                <a href="<?php echo esc_url($action['url']); ?>" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-primary-300 dark:hover:border-primary-600 transition-colors">
+                    <?php echo dofs_icon($action['icon'], 'w-4 h-4 text-gray-400'); ?>
+                    <?php echo esc_html($action['title']); ?>
                 </a>
                 <?php endforeach; ?>
             </div>
