@@ -93,6 +93,63 @@
                     <span class="hidden dark:inline"><?php echo dofs_icon('sun', 'w-5 h-5'); ?></span>
                 </button>
 
+                <!-- App Launcher (Services) -->
+                <div class="relative" id="app-launcher-container">
+                    <button
+                        type="button"
+                        id="app-launcher-toggle"
+                        class="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700 transition-colors"
+                        aria-label="<?php esc_attr_e('Services', 'dofs-theme'); ?>"
+                    >
+                        <?php echo dofs_icon('apps', 'w-5 h-5'); ?>
+                    </button>
+
+                    <!-- App Launcher dropdown -->
+                    <div
+                        id="app-launcher-dropdown"
+                        class="hidden absolute end-0 mt-2 w-72 rounded-xl bg-white dark:bg-gray-800 shadow-lg ring-1 ring-black ring-opacity-5 dark:ring-gray-700 z-50"
+                    >
+                        <div class="px-4 py-3 border-b border-gray-100 dark:border-gray-700">
+                            <h3 class="text-sm font-semibold text-gray-900 dark:text-white">
+                                <?php esc_html_e('Services', 'dofs-theme'); ?>
+                            </h3>
+                        </div>
+                        <div class="p-3 grid grid-cols-3 gap-2">
+                            <?php
+                            $services = dofs_get_services_menu();
+                            foreach ($services as $service):
+                            ?>
+                            <a
+                                href="<?php echo esc_url($service['url']); ?>"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                class="flex flex-col items-center gap-2 p-3 rounded-xl hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
+                            >
+                                <?php if (!empty($service['image'])): ?>
+                                    <img
+                                        src="<?php echo esc_url($service['image']); ?>"
+                                        alt="<?php echo esc_attr($service['title']); ?>"
+                                        class="w-10 h-10 rounded-lg object-contain"
+                                    >
+                                <?php else: ?>
+                                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-500 to-primary-700 flex items-center justify-center text-white">
+                                        <?php echo dofs_icon($service['icon'] ?? 'external-link', 'w-5 h-5'); ?>
+                                    </div>
+                                <?php endif; ?>
+                                <span class="text-xs text-center text-gray-600 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white truncate w-full">
+                                    <?php echo esc_html($service['title']); ?>
+                                </span>
+                            </a>
+                            <?php endforeach; ?>
+                        </div>
+                        <div class="px-4 py-3 border-t border-gray-100 dark:border-gray-700">
+                            <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
+                                <?php esc_html_e('Manage services in Appearance → Menus', 'dofs-theme'); ?>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Notifications -->
                 <div class="relative" id="notifications-container">
                     <button

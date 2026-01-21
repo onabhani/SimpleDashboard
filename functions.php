@@ -42,6 +42,7 @@ function dofs_theme_setup() {
         'dofs_topbar' => __('Dashboard Topbar Menu', 'dofs-theme'),
         'dofs_sidebar' => __('Dashboard Sidebar Menu', 'dofs-theme'),
         'dofs_user' => __('User Dropdown Menu', 'dofs-theme'),
+        'dofs_services' => __('Services App Launcher', 'dofs-theme'),
     ]);
 }
 add_action('after_setup_theme', 'dofs_theme_setup');
@@ -202,59 +203,54 @@ function dofs_get_menu_icon($item): string {
 }
 
 /**
- * Default sidebar menu
+ * Default sidebar menu - New unified structure
  */
 function dofs_get_default_sidebar_menu(): array {
     return [
         [
             'section' => 'MAIN',
             'items' => [
-                ['id' => 1, 'title' => 'Dashboard', 'url' => home_url('/'), 'icon' => 'home', 'current' => is_front_page()],
-                ['id' => 2, 'title' => 'Quick Access', 'url' => '#quick-access', 'icon' => 'grid'],
+                ['id' => 1, 'title' => __('Dashboard', 'dofs-theme'), 'url' => home_url('/'), 'icon' => 'home', 'current' => is_front_page()],
             ],
         ],
         [
-            'section' => 'SALES & ORDERS',
+            'section' => 'BUSINESS',
             'items' => [
-                ['id' => 3, 'title' => 'Sales Overview', 'url' => home_url('/sales/'), 'icon' => 'chart'],
-                ['id' => 4, 'title' => 'Orders', 'url' => home_url('/orders/'), 'icon' => 'cart'],
-                ['id' => 5, 'title' => 'Customers', 'url' => home_url('/customers/'), 'icon' => 'users'],
+                ['id' => 2, 'title' => __('CRM', 'dofs-theme'), 'url' => home_url('/crm/'), 'icon' => 'users'],
+                ['id' => 3, 'title' => __('Sales & Orders', 'dofs-theme'), 'url' => home_url('/sales/'), 'icon' => 'chart'],
             ],
         ],
         [
-            'section' => 'INVENTORY',
+            'section' => 'OPERATIONS',
             'items' => [
-                ['id' => 6, 'title' => 'Products', 'url' => home_url('/products/'), 'icon' => 'cube'],
-                ['id' => 7, 'title' => 'Stock Levels', 'url' => home_url('/stock/'), 'icon' => 'archive'],
+                ['id' => 4, 'title' => __('Measurements', 'dofs-theme'), 'url' => home_url('/measurements/'), 'icon' => 'ruler'],
+                ['id' => 5, 'title' => __('Installation', 'dofs-theme'), 'url' => home_url('/installation/'), 'icon' => 'wrench'],
+                ['id' => 6, 'title' => __('Design', 'dofs-theme'), 'url' => home_url('/design/'), 'icon' => 'pencil'],
+                ['id' => 7, 'title' => __('Production', 'dofs-theme'), 'url' => home_url('/production/'), 'icon' => 'factory'],
+                ['id' => 8, 'title' => __('Warehouse', 'dofs-theme'), 'url' => home_url('/warehouse/'), 'icon' => 'warehouse'],
+                ['id' => 9, 'title' => __('Logistics', 'dofs-theme'), 'url' => home_url('/logistics/'), 'icon' => 'truck'],
             ],
         ],
         [
-            'section' => 'HR',
+            'section' => 'MANAGEMENT',
             'items' => [
-                ['id' => 8, 'title' => 'HR Overview', 'url' => home_url('/hr/'), 'icon' => 'team'],
-                ['id' => 9, 'title' => 'My HR', 'url' => home_url('/my-hr/'), 'icon' => 'user'],
-                ['id' => 10, 'title' => 'My Team', 'url' => home_url('/my-team/'), 'icon' => 'users'],
-                ['id' => 11, 'title' => 'HR Actions', 'url' => home_url('/hr-actions/'), 'icon' => 'clipboard'],
+                ['id' => 10, 'title' => __('Projects', 'dofs-theme'), 'url' => home_url('/projects/'), 'icon' => 'grid'],
+                ['id' => 11, 'title' => __('Maintenance', 'dofs-theme'), 'url' => home_url('/maintenance/'), 'icon' => 'tool'],
+                ['id' => 12, 'title' => __('Reports & Analytics', 'dofs-theme'), 'url' => home_url('/reports/'), 'icon' => 'chart-bar'],
             ],
         ],
         [
-            'section' => 'REPORTS & DATA',
+            'section' => 'ADMINISTRATION',
             'items' => [
-                ['id' => 12, 'title' => 'Reports', 'url' => home_url('/reports/'), 'icon' => 'document'],
-                ['id' => 13, 'title' => 'Analytics', 'url' => home_url('/analytics/'), 'icon' => 'trending'],
-            ],
-        ],
-        [
-            'section' => 'WORKFLOWS',
-            'items' => [
-                ['id' => 14, 'title' => 'My Tasks', 'url' => home_url('/tasks/'), 'icon' => 'tasks'],
+                ['id' => 13, 'title' => __('Administration', 'dofs-theme'), 'url' => home_url('/admin/'), 'icon' => 'settings'],
+                ['id' => 14, 'title' => __('Human Resources', 'dofs-theme'), 'url' => home_url('/hr/'), 'icon' => 'user'],
             ],
         ],
         [
             'section' => 'SETTINGS',
             'items' => [
-                ['id' => 15, 'title' => 'Settings', 'url' => home_url('/settings/'), 'icon' => 'settings'],
-                ['id' => 16, 'title' => 'Help', 'url' => home_url('/help/'), 'icon' => 'help'],
+                ['id' => 15, 'title' => __('Settings', 'dofs-theme'), 'url' => home_url('/settings/'), 'icon' => 'cog'],
+                ['id' => 16, 'title' => __('Help', 'dofs-theme'), 'url' => home_url('/help/'), 'icon' => 'help'],
             ],
         ],
     ];
@@ -292,6 +288,52 @@ function dofs_get_topbar_menu(): array {
     }
 
     return $menu_items;
+}
+
+/**
+ * Get services menu items for app launcher
+ */
+function dofs_get_services_menu(): array {
+    $locations = get_nav_menu_locations();
+
+    if (!isset($locations['dofs_services'])) {
+        return dofs_get_default_services_menu();
+    }
+
+    $menu = wp_get_nav_menu_object($locations['dofs_services']);
+
+    if (!$menu) {
+        return dofs_get_default_services_menu();
+    }
+
+    $items = wp_get_nav_menu_items($menu->term_id);
+    $services = [];
+
+    if ($items) {
+        foreach ($items as $item) {
+            $services[] = [
+                'id' => $item->ID,
+                'title' => $item->title,
+                'url' => $item->url,
+                'icon' => dofs_get_menu_icon($item),
+                'target' => '_blank',
+                'image' => get_post_meta($item->ID, '_menu_item_image', true) ?: '',
+            ];
+        }
+    }
+
+    return !empty($services) ? $services : dofs_get_default_services_menu();
+}
+
+/**
+ * Default services menu for app launcher
+ */
+function dofs_get_default_services_menu(): array {
+    return [
+        ['id' => 1, 'title' => __('Odoo ERP', 'dofs-theme'), 'url' => '#', 'icon' => 'external-link'],
+        ['id' => 2, 'title' => __('Google Drive', 'dofs-theme'), 'url' => '#', 'icon' => 'external-link'],
+        ['id' => 3, 'title' => __('Email', 'dofs-theme'), 'url' => '#', 'icon' => 'external-link'],
+    ];
 }
 
 /**
@@ -352,6 +394,18 @@ function dofs_icon(string $name, string $class = 'w-5 h-5'): string {
         'logout' => '<path stroke-linecap="round" stroke-linejoin="round" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />',
         'sun' => '<path stroke-linecap="round" stroke-linejoin="round" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />',
         'moon' => '<path stroke-linecap="round" stroke-linejoin="round" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />',
+        // New icons for unified menu
+        'ruler' => '<path stroke-linecap="round" stroke-linejoin="round" d="M6 2L2 6l14 14 4-4L6 2zm6.586 2.586l1.414 1.414M9.172 6l1.414 1.414M5.757 9.414l1.415 1.414" />',
+        'wrench' => '<path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />',
+        'pencil' => '<path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />',
+        'factory' => '<path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />',
+        'warehouse' => '<path stroke-linecap="round" stroke-linejoin="round" d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />',
+        'truck' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10a1 1 0 001 1h1m8-1a1 1 0 01-1 1H9m4-1V8a1 1 0 011-1h2.586a1 1 0 01.707.293l3.414 3.414a1 1 0 01.293.707V16a1 1 0 01-1 1h-1m-6-1a1 1 0 001 1h1M5 17a2 2 0 104 0m-4 0a2 2 0 114 0m6 0a2 2 0 104 0m-4 0a2 2 0 114 0" />',
+        'tool' => '<path stroke-linecap="round" stroke-linejoin="round" d="M11 4a2 2 0 114 0v1a1 1 0 001 1h3a1 1 0 011 1v3a1 1 0 01-1 1h-1a2 2 0 100 4h1a1 1 0 011 1v3a1 1 0 01-1 1h-3a1 1 0 01-1-1v-1a2 2 0 10-4 0v1a1 1 0 01-1 1H7a1 1 0 01-1-1v-3a1 1 0 00-1-1H4a2 2 0 110-4h1a1 1 0 001-1V7a1 1 0 011-1h3a1 1 0 001-1V4z" />',
+        'chart-bar' => '<path stroke-linecap="round" stroke-linejoin="round" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />',
+        'cog' => '<path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />',
+        'apps' => '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />',
+        'external-link' => '<path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />',
     ];
 
     $path = $icons[$name] ?? $icons['document'];

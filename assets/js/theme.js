@@ -9,6 +9,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         initSidebar();
         initThemeToggle();
+        initAppLauncher();
         initNotifications();
         initUserDropdown();
         initSearch();
@@ -109,6 +110,54 @@
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
             if (!localStorage.getItem('dofs-theme')) {
                 setTheme(e.matches ? 'dark' : 'light');
+            }
+        });
+    }
+
+    /**
+     * App Launcher (Services) Dropdown
+     */
+    function initAppLauncher() {
+        const container = document.getElementById('app-launcher-container');
+        const toggleBtn = document.getElementById('app-launcher-toggle');
+        const dropdown = document.getElementById('app-launcher-dropdown');
+
+        if (!container || !toggleBtn || !dropdown) return;
+
+        function openDropdown() {
+            dropdown.classList.remove('hidden');
+            toggleBtn.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeDropdown() {
+            dropdown.classList.add('hidden');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        function toggleDropdown() {
+            if (dropdown.classList.contains('hidden')) {
+                openDropdown();
+            } else {
+                closeDropdown();
+            }
+        }
+
+        toggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleDropdown();
+        });
+
+        // Close when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!container.contains(e.target)) {
+                closeDropdown();
+            }
+        });
+
+        // Close on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeDropdown();
             }
         });
     }
