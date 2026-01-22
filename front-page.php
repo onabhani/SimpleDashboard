@@ -89,10 +89,10 @@ get_sidebar();
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap gap-2 sm:gap-3">
                 <?php
                 $quick_actions = apply_filters('dofs_quick_actions', [
+                    ['title' => __('All Orders', 'dofs-theme'), 'url' => home_url('/sales/orders/'), 'icon' => 'chart'],
                     ['title' => __('New Customer', 'dofs-theme'), 'url' => home_url('/crm/new-customer/'), 'icon' => 'users'],
                     ['title' => __('New Entry', 'dofs-theme'), 'url' => home_url('/crm/new-entry/'), 'icon' => 'document'],
                     ['title' => __('New Invoice', 'dofs-theme'), 'url' => home_url('/crm/new-invoice/'), 'icon' => 'cart'],
-                    ['title' => __('All Orders', 'dofs-theme'), 'url' => home_url('/sales/orders/'), 'icon' => 'chart'],
                     ['title' => __('New Project', 'dofs-theme'), 'url' => home_url('/projects/new/'), 'icon' => 'grid'],
                     ['title' => __('New Maintenance', 'dofs-theme'), 'url' => home_url('/maintenance/new/'), 'icon' => 'tool'],
                     ['title' => __('View Reports', 'dofs-theme'), 'url' => home_url('/reports/'), 'icon' => 'chart-bar'],

@@ -49,12 +49,12 @@ get_sidebar();
         </div>
 
         <!-- Settings Form -->
-        <form id="settings-form" method="post" class="space-y-8">
+        <form id="settings-form" method="post" class="space-y-10">
             <?php wp_nonce_field('dofs_save_settings', 'dofs_settings_nonce'); ?>
 
             <!-- Display Preferences -->
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-5 sm:px-6 py-5 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
                         <div class="w-8 h-8 rounded-lg bg-amber-100 dark:bg-amber-500/20 flex items-center justify-center">
                             <?php echo dofs_icon('sun', 'w-5 h-5 text-amber-600 dark:text-amber-400'); ?>
@@ -62,7 +62,7 @@ get_sidebar();
                         <?php esc_html_e('Display Preferences', 'dofs-theme'); ?>
                     </h2>
                 </div>
-                <div class="p-4 sm:p-6 space-y-6">
+                <div class="px-5 sm:px-6 py-6 space-y-6">
                     <!-- Theme -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-start">
                         <label class="text-sm font-medium text-gray-700 dark:text-gray-300 pt-2">
@@ -134,7 +134,7 @@ get_sidebar();
 
             <!-- Notification Settings -->
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-5 sm:px-6 py-5 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
                         <div class="w-8 h-8 rounded-lg bg-red-100 dark:bg-red-500/20 flex items-center justify-center">
                             <?php echo dofs_icon('bell', 'w-5 h-5 text-red-600 dark:text-red-400'); ?>
@@ -142,7 +142,7 @@ get_sidebar();
                         <?php esc_html_e('Notification Settings', 'dofs-theme'); ?>
                     </h2>
                 </div>
-                <div class="p-4 sm:p-6 space-y-6">
+                <div class="px-5 sm:px-6 py-6 space-y-6">
                     <!-- Email Notifications -->
                     <div class="flex items-center justify-between">
                         <div>
@@ -193,7 +193,7 @@ get_sidebar();
 
             <!-- Privacy & Security -->
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-5 sm:px-6 py-5 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
                         <div class="w-8 h-8 rounded-lg bg-green-100 dark:bg-green-500/20 flex items-center justify-center">
                             <svg class="w-5 h-5 text-green-600 dark:text-green-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -203,8 +203,8 @@ get_sidebar();
                         <?php esc_html_e('Privacy & Security', 'dofs-theme'); ?>
                     </h2>
                 </div>
-                <div class="p-4 sm:p-6">
-                    <div class="space-y-3">
+                <div class="px-5 sm:px-6 py-6">
+                    <div class="space-y-4">
                         <!-- Change Password -->
                         <a href="<?php echo esc_url(admin_url('profile.php#password')); ?>" class="flex items-center justify-between p-4 rounded-xl border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors group">
                             <div class="flex items-center gap-4">
@@ -276,7 +276,7 @@ get_sidebar();
 
             <!-- Regional Settings -->
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-5 sm:px-6 py-5 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
                         <div class="w-8 h-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center">
                             <svg class="w-5 h-5 text-blue-600 dark:text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -286,7 +286,7 @@ get_sidebar();
                         <?php esc_html_e('Regional Settings', 'dofs-theme'); ?>
                     </h2>
                 </div>
-                <div class="p-4 sm:p-6 space-y-6">
+                <div class="px-5 sm:px-6 py-6 space-y-6">
                     <!-- Timezone -->
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 items-center">
                         <label for="timezone" class="text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -339,7 +339,7 @@ get_sidebar();
 
             <!-- Quick Access Customization -->
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden">
-                <div class="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+                <div class="px-5 sm:px-6 py-5 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white flex items-center gap-3">
                         <div class="w-8 h-8 rounded-lg bg-pink-100 dark:bg-pink-500/20 flex items-center justify-center">
                             <?php echo dofs_icon('grid', 'w-5 h-5 text-pink-600 dark:text-pink-400'); ?>
@@ -347,7 +347,7 @@ get_sidebar();
                         <?php esc_html_e('Quick Access Customization', 'dofs-theme'); ?>
                     </h2>
                 </div>
-                <div class="p-4 sm:p-6">
+                <div class="px-5 sm:px-6 py-6">
                     <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">
                         <?php esc_html_e('Choose which cards to show on your dashboard Quick Access section.', 'dofs-theme'); ?>
                     </p>
