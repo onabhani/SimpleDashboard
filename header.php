@@ -76,6 +76,7 @@
                 <!-- Mobile search button -->
                 <button
                     type="button"
+                    id="mobile-search-toggle"
                     class="md:hidden p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700 transition-colors"
                     aria-label="<?php esc_attr_e('Search', 'dofs-theme'); ?>"
                 >
@@ -248,6 +249,40 @@
             </div>
         </div>
     </header>
+
+    <!-- Mobile Search Overlay -->
+    <div id="mobile-search-overlay" class="hidden fixed inset-0 z-50 md:hidden">
+        <div class="absolute inset-0 bg-gray-900/50 backdrop-blur-sm" id="mobile-search-backdrop"></div>
+        <div class="relative bg-white dark:bg-gray-800 p-4 shadow-lg">
+            <div class="flex items-center gap-3">
+                <div class="relative flex-1">
+                    <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                        <?php echo dofs_icon('search', 'w-5 h-5 text-gray-400'); ?>
+                    </div>
+                    <input
+                        type="search"
+                        id="mobile-search-input"
+                        class="block w-full ps-10 pe-4 py-3 text-base text-gray-900 dark:text-white bg-gray-100 dark:bg-gray-700 border-0 rounded-xl focus:ring-2 focus:ring-primary-500 dark:focus:ring-primary-400 placeholder-gray-500 dark:placeholder-gray-400"
+                        placeholder="<?php esc_attr_e('Search entries...', 'dofs-theme'); ?>"
+                        autocomplete="off"
+                    >
+                </div>
+                <button
+                    type="button"
+                    id="mobile-search-close"
+                    class="p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-gray-200 dark:hover:bg-gray-700 transition-colors"
+                >
+                    <?php echo dofs_icon('close', 'w-6 h-6'); ?>
+                </button>
+            </div>
+            <!-- Mobile search results -->
+            <div id="mobile-search-results" class="hidden mt-3 max-h-[60vh] overflow-y-auto rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-200 dark:border-gray-700">
+                <div id="mobile-search-results-list">
+                    <!-- Results populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Main layout with sidebar -->
     <div class="flex flex-1 overflow-hidden">

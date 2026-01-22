@@ -86,7 +86,7 @@ get_sidebar();
             <h2 class="text-lg font-semibold text-gray-900 dark:text-white mb-4">
                 <?php esc_html_e('Quick Actions', 'dofs-theme'); ?>
             </h2>
-            <div class="flex flex-wrap gap-2">
+            <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap gap-2 sm:gap-3">
                 <?php
                 $quick_actions = apply_filters('dofs_quick_actions', [
                     ['title' => __('New Customer', 'dofs-theme'), 'url' => home_url('/crm/new-customer/'), 'icon' => 'users'],
@@ -100,9 +100,9 @@ get_sidebar();
 
                 foreach ($quick_actions as $action):
                 ?>
-                <a href="<?php echo esc_url($action['url']); ?>" class="inline-flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-primary-300 dark:hover:border-primary-600 transition-colors">
-                    <?php echo dofs_icon($action['icon'], 'w-4 h-4 text-gray-400'); ?>
-                    <?php echo esc_html($action['title']); ?>
+                <a href="<?php echo esc_url($action['url']); ?>" class="flex items-center justify-center gap-2 px-3 py-2.5 sm:px-4 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl text-xs sm:text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 hover:border-primary-300 dark:hover:border-primary-600 transition-colors">
+                    <?php echo dofs_icon($action['icon'], 'w-4 h-4 text-gray-400 shrink-0'); ?>
+                    <span class="truncate"><?php echo esc_html($action['title']); ?></span>
                 </a>
                 <?php endforeach; ?>
             </div>
@@ -146,8 +146,8 @@ get_sidebar();
         <!-- Two Column Layout -->
         <div class="grid lg:grid-cols-3 gap-6">
             <!-- Recent Orders -->
-            <section class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
-                <div class="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-700">
+            <section class="lg:col-span-2 bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 min-w-0">
+                <div class="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                         <?php esc_html_e('Recent Orders', 'dofs-theme'); ?>
                     </h2>
@@ -156,7 +156,7 @@ get_sidebar();
                     </a>
                 </div>
                 <div class="overflow-x-auto">
-                    <table class="w-full">
+                    <table class="w-full min-w-[500px]">
                         <thead>
                             <tr class="text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                 <th class="px-5 py-3"><?php esc_html_e('Order', 'dofs-theme'); ?></th>
@@ -206,8 +206,8 @@ get_sidebar();
             </section>
 
             <!-- My Tasks -->
-            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
-                <div class="flex items-center justify-between p-5 border-b border-gray-200 dark:border-gray-700">
+            <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 min-w-0 overflow-hidden">
+                <div class="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                         <?php esc_html_e('My Tasks', 'dofs-theme'); ?>
                     </h2>
@@ -215,7 +215,7 @@ get_sidebar();
                         5 <?php esc_html_e('pending', 'dofs-theme'); ?>
                     </span>
                 </div>
-                <div class="p-5 space-y-3">
+                <div class="p-4 sm:p-5 space-y-3">
                     <?php
                     $tasks = [
                         ['title' => __('Review leave request - Ahmed', 'dofs-theme'), 'priority' => 'high', 'due' => __('Today', 'dofs-theme')],
@@ -234,11 +234,11 @@ get_sidebar();
                     foreach ($tasks as $task):
                     ?>
                     <div class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer">
-                        <div class="flex-shrink-0 mt-1">
+                        <div class="flex-shrink-0 mt-1.5">
                             <div class="w-2 h-2 rounded-full <?php echo esc_attr($priority_classes[$task['priority']]); ?>"></div>
                         </div>
                         <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white">
+                            <p class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
                                 <?php echo esc_html($task['title']); ?>
                             </p>
                             <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
@@ -248,7 +248,7 @@ get_sidebar();
                     </div>
                     <?php endforeach; ?>
                 </div>
-                <div class="p-5 pt-0">
+                <div class="p-4 sm:p-5 pt-0">
                     <a href="<?php echo esc_url(home_url('/tasks/')); ?>" class="block w-full py-2.5 text-center text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 rounded-xl hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors">
                         <?php esc_html_e('View All Tasks', 'dofs-theme'); ?>
                     </a>
