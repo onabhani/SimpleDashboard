@@ -999,3 +999,8 @@ input[type="search"].rounded-xl {
 .space-y-10 > :not([hidden]) ~ :not([hidden]) {
     margin-top: 2.5rem;
 }
+
+/* Space-y-12 utility for settings page */
+.space-y-12 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 3rem;
+}
