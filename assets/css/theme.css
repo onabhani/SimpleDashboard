@@ -985,3 +985,17 @@ body.admin-bar #mobile-search-overlay {
 .min-w-\[500px\] {
     min-width: 500px;
 }
+
+/* Form field styling for settings page */
+select.rounded-xl,
+input[type="text"].rounded-xl,
+input[type="email"].rounded-xl,
+input[type="search"].rounded-xl {
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+}
+
+/* Space-y-10 utility */
+.space-y-10 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 2.5rem;
+}
