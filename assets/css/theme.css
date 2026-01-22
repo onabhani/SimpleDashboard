@@ -822,59 +822,73 @@ html.admin-bar body {
     padding-top: 0 !important;
 }
 
-.admin-bar #dofs-app {
-    padding-top: 32px;
-    margin-top: 0 !important;
+body.admin-bar #dofs-app {
+    padding-top: 32px !important;
+    min-height: calc(100vh - 32px) !important;
 }
 
-.admin-bar .sticky.top-0 {
-    top: 32px;
+body.admin-bar header.sticky {
+    top: 32px !important;
 }
 
-.admin-bar #sidebar {
-    top: 32px;
-    height: calc(100vh - 32px);
+body.admin-bar #sidebar {
+    top: 32px !important;
+    height: calc(100vh - 32px) !important;
 }
 
-.admin-bar #sidebar-backdrop {
-    top: 32px;
+body.admin-bar #sidebar-backdrop {
+    top: 32px !important;
 }
 
-@media (max-width: 782px) {
-    .admin-bar #dofs-app {
-        padding-top: 46px;
+body.admin-bar #mobile-search-overlay {
+    top: 32px !important;
+}
+
+@media screen and (max-width: 782px) {
+    body.admin-bar #dofs-app {
+        padding-top: 46px !important;
+        min-height: calc(100vh - 46px) !important;
     }
 
-    .admin-bar .sticky.top-0 {
-        top: 46px;
+    body.admin-bar header.sticky {
+        top: 46px !important;
     }
 
-    .admin-bar #sidebar {
-        top: 46px;
-        height: calc(100vh - 46px);
+    body.admin-bar #sidebar {
+        top: 46px !important;
+        height: calc(100vh - 46px) !important;
     }
 
-    .admin-bar #sidebar-backdrop {
-        top: 46px;
+    body.admin-bar #sidebar-backdrop {
+        top: 46px !important;
+    }
+
+    body.admin-bar #mobile-search-overlay {
+        top: 46px !important;
     }
 }
 
-@media (max-width: 600px) {
-    .admin-bar #dofs-app {
-        padding-top: 0;
+@media screen and (max-width: 600px) {
+    body.admin-bar #dofs-app {
+        padding-top: 0 !important;
+        min-height: 100vh !important;
     }
 
-    .admin-bar .sticky.top-0 {
-        top: 0;
+    body.admin-bar header.sticky {
+        top: 0 !important;
     }
 
-    .admin-bar #sidebar {
-        top: 0;
-        height: 100vh;
+    body.admin-bar #sidebar {
+        top: 0 !important;
+        height: 100vh !important;
     }
 
-    .admin-bar #sidebar-backdrop {
-        top: 0;
+    body.admin-bar #sidebar-backdrop {
+        top: 0 !important;
+    }
+
+    body.admin-bar #mobile-search-overlay {
+        top: 0 !important;
     }
 }
 

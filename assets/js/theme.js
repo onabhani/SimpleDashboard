@@ -339,8 +339,8 @@
                 if (activeItem) {
                     activeItem.click();
                 } else if (currentQuery.length >= 2) {
-                    // Redirect to search results page
-                    window.location.href = window.location.origin + '/?s=' + encodeURIComponent(currentQuery);
+                    // Perform search immediately
+                    performSearch(currentQuery);
                 }
             }
         });
@@ -554,7 +554,8 @@
         searchInput.addEventListener('keydown', function(e) {
             if (e.key === 'Enter' && currentQuery.length >= 2) {
                 e.preventDefault();
-                window.location.href = window.location.origin + '/?s=' + encodeURIComponent(currentQuery);
+                // Perform search immediately instead of redirecting
+                performMobileSearch(currentQuery);
             } else if (e.key === 'Escape') {
                 closeSearch();
             }
