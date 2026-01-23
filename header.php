@@ -117,7 +117,11 @@
                         </div>
                         <div class="p-3 grid grid-cols-3 gap-2">
                             <?php
-                            $services = dofs_get_services_menu();
+                            /**
+                             * Get services from admin settings
+                             * Configure via Dashboard > DOFS Dashboard > Services
+                             */
+                            $services = dofs_get_configured_services();
                             foreach ($services as $service):
                             ?>
                             <a
@@ -144,9 +148,9 @@
                             <?php endforeach; ?>
                         </div>
                         <div class="px-4 py-3 border-t border-gray-100 dark:border-gray-700">
-                            <p class="text-xs text-gray-500 dark:text-gray-400 text-center">
-                                <?php esc_html_e('Manage services in Appearance → Menus', 'dofs-theme'); ?>
-                            </p>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=dofs-services')); ?>" class="block text-xs text-primary-600 dark:text-primary-400 text-center hover:underline">
+                                <?php esc_html_e('Manage Services', 'dofs-theme'); ?>
+                            </a>
                         </div>
                     </div>
                 </div>

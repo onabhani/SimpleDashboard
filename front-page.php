@@ -42,20 +42,10 @@ get_sidebar();
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <?php
                 /**
-                 * Filter: dofs_quick_access_items
-                 * Customize Quick Access cards
-                 *
-                 * @param array $items Array of quick access items
-                 * Each item: ['id', 'title', 'icon', 'url', 'gradient', 'shadow']
+                 * Get Quick Access items from admin settings
+                 * Configure via Dashboard > DOFS Dashboard > Quick Access
                  */
-                $quick_access = apply_filters('dofs_quick_access_items', [
-                    ['id' => 'crm', 'title' => __('CRM', 'dofs-theme'), 'icon' => 'users', 'url' => home_url('/crm/'), 'gradient' => 'from-blue-500 to-blue-600', 'shadow' => 'shadow-blue-500/25'],
-                    ['id' => 'sales', 'title' => __('Sales & Orders', 'dofs-theme'), 'icon' => 'chart', 'url' => home_url('/sales/'), 'gradient' => 'from-purple-500 to-purple-600', 'shadow' => 'shadow-purple-500/25'],
-                    ['id' => 'production', 'title' => __('Production', 'dofs-theme'), 'icon' => 'factory', 'url' => home_url('/production/'), 'gradient' => 'from-orange-500 to-orange-600', 'shadow' => 'shadow-orange-500/25'],
-                    ['id' => 'warehouse', 'title' => __('Warehouse', 'dofs-theme'), 'icon' => 'warehouse', 'url' => home_url('/warehouse/'), 'gradient' => 'from-green-500 to-green-600', 'shadow' => 'shadow-green-500/25'],
-                    ['id' => 'projects', 'title' => __('Projects', 'dofs-theme'), 'icon' => 'grid', 'url' => home_url('/projects/'), 'gradient' => 'from-pink-500 to-pink-600', 'shadow' => 'shadow-pink-500/25'],
-                    ['id' => 'reports', 'title' => __('Reports', 'dofs-theme'), 'icon' => 'chart-bar', 'url' => home_url('/reports/'), 'gradient' => 'from-cyan-500 to-cyan-600', 'shadow' => 'shadow-cyan-500/25'],
-                ]);
+                $quick_access = apply_filters('dofs_quick_access_items', dofs_get_configured_quick_access());
 
                 // Filter out hidden items based on user settings
                 $hidden_items = get_user_meta(get_current_user_id(), 'dofs_quick_access_hidden', true);
@@ -88,15 +78,11 @@ get_sidebar();
             </h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap gap-2 sm:gap-3">
                 <?php
-                $quick_actions = apply_filters('dofs_quick_actions', [
-                    ['title' => __('All Orders', 'dofs-theme'), 'url' => home_url('/sales/orders/'), 'icon' => 'chart'],
-                    ['title' => __('New Customer', 'dofs-theme'), 'url' => home_url('/crm/new-customer/'), 'icon' => 'users'],
-                    ['title' => __('New Entry', 'dofs-theme'), 'url' => home_url('/crm/new-entry/'), 'icon' => 'document'],
-                    ['title' => __('New Invoice', 'dofs-theme'), 'url' => home_url('/crm/new-invoice/'), 'icon' => 'cart'],
-                    ['title' => __('New Project', 'dofs-theme'), 'url' => home_url('/projects/new/'), 'icon' => 'grid'],
-                    ['title' => __('New Maintenance', 'dofs-theme'), 'url' => home_url('/maintenance/new/'), 'icon' => 'tool'],
-                    ['title' => __('View Reports', 'dofs-theme'), 'url' => home_url('/reports/'), 'icon' => 'chart-bar'],
-                ]);
+                /**
+                 * Get Quick Actions from admin settings
+                 * Configure via Dashboard > DOFS Dashboard > Quick Actions
+                 */
+                $quick_actions = apply_filters('dofs_quick_actions', dofs_get_configured_quick_actions());
 
                 foreach ($quick_actions as $action):
                 ?>
