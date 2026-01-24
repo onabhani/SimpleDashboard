@@ -1,0 +1,294 @@
+/**
+ * DOFS Dashboard Admin Styles
+ */
+
+.dofs-admin-wrap {
+    max-width: 1200px;
+}
+
+/* Admin Cards Grid */
+.dofs-admin-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+    margin: 30px 0;
+}
+
+.dofs-admin-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s, transform 0.2s;
+}
+
+.dofs-admin-card:hover {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    transform: translateY(-2px);
+}
+
+.dofs-admin-card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+
+.dofs-admin-card-icon .dashicons {
+    font-size: 24px;
+    width: 24px;
+    height: 24px;
+    color: #fff;
+}
+
+.dofs-admin-card h2 {
+    margin: 0 0 8px;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1e1e1e;
+}
+
+.dofs-admin-card p {
+    margin: 0 0 16px;
+    color: #666;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.dofs-admin-card .button {
+    width: 100%;
+    text-align: center;
+}
+
+/* Info Table */
+.dofs-admin-info {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 12px;
+    padding: 24px;
+    margin-top: 30px;
+}
+
+.dofs-admin-info h3 {
+    margin: 0 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.dofs-admin-info table {
+    border: none;
+}
+
+.dofs-admin-info th {
+    width: 200px;
+    font-weight: 500;
+    color: #666;
+}
+
+.dofs-admin-info code {
+    background: #f0f0f1;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+}
+
+/* Items List */
+.dofs-items-list {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin: 20px 0;
+}
+
+.dofs-item-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    transition: background 0.15s;
+}
+
+.dofs-item-row:last-child {
+    border-bottom: none;
+}
+
+.dofs-item-row:hover {
+    background: #f9f9f9;
+}
+
+.dofs-item-row.ui-sortable-helper {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+}
+
+.dofs-item-row.ui-sortable-placeholder {
+    background: #e8f4fc;
+    border: 2px dashed #2271b1;
+    visibility: visible !important;
+}
+
+.dofs-item-handle {
+    cursor: grab;
+    color: #999;
+    padding: 8px;
+    margin: -8px;
+}
+
+.dofs-item-handle:active {
+    cursor: grabbing;
+}
+
+.dofs-item-handle .dashicons {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.dofs-item-fields {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    align-items: center;
+}
+
+.dofs-field {
+    flex: 1;
+    min-width: 150px;
+}
+
+.dofs-field label {
+    display: block;
+    font-size: 11px;
+    font-weight: 500;
+    color: #666;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.dofs-field input[type="text"],
+.dofs-field input[type="url"],
+.dofs-field select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.dofs-field input:focus,
+.dofs-field select:focus {
+    border-color: #2271b1;
+    box-shadow: 0 0 0 1px #2271b1;
+    outline: none;
+}
+
+.dofs-field-small {
+    flex: 0 0 140px;
+    min-width: 140px;
+}
+
+.dofs-field-checkbox {
+    flex: 0 0 auto;
+    min-width: auto;
+}
+
+.dofs-field-checkbox label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    text-transform: none;
+    letter-spacing: 0;
+    cursor: pointer;
+    margin-bottom: 0;
+    padding: 8px 0;
+}
+
+.dofs-field-checkbox input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
+.dofs-item-actions {
+    flex-shrink: 0;
+}
+
+.dofs-item-actions .button {
+    padding: 4px 8px;
+    min-height: 32px;
+}
+
+.dofs-item-actions .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #cc1818;
+}
+
+.dofs-remove-item:hover {
+    background: #fee;
+    border-color: #cc1818;
+}
+
+/* Add Item Button */
+.dofs-add-item-wrap {
+    padding: 16px;
+    background: #f9f9f9;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 8px 8px;
+    margin-top: -1px;
+}
+
+.dofs-add-item-wrap .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.dofs-add-item-wrap .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Submit Button */
+.submit {
+    margin-top: 20px;
+}
+
+/* Responsive */
+@media screen and (max-width: 782px) {
+    .dofs-item-fields {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dofs-field,
+    .dofs-field-small {
+        flex: 1 1 100%;
+        min-width: 100%;
+    }
+
+    .dofs-item-row {
+        flex-wrap: wrap;
+    }
+
+    .dofs-item-handle {
+        order: -1;
+    }
+
+    .dofs-item-actions {
+        margin-left: auto;
+    }
+}

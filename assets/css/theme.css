@@ -999,3 +999,582 @@ input[type="search"].rounded-xl {
 .space-y-10 > :not([hidden]) ~ :not([hidden]) {
     margin-top: 2.5rem;
 }
+
+/* Space-y-12 utility for settings page */
+.space-y-12 > :not([hidden]) ~ :not([hidden]) {
+    margin-top: 3rem;
+}
+
+/* ========================================
+   GravityView Styling
+   ======================================== */
+
+/* GravityView Container */
+.gv-container,
+.gv-table-view,
+.gv-list-view {
+    background-color: #fff;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    overflow: hidden;
+}
+
+.dark .gv-container,
+.dark .gv-table-view,
+.dark .gv-list-view {
+    background-color: #1f2937;
+    border-color: #374151;
+}
+
+/* ========================================
+   GravityView Pagination
+   ======================================== */
+
+.gv-widget-pagination,
+.gravityview-pagination,
+.gv-pagination,
+.pagination,
+nav.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 1.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Page numbers styling */
+.gv-widget-pagination .page-numbers,
+.gravityview-pagination .page-numbers,
+.gv-pagination a,
+.gv-pagination span,
+.pagination a,
+.pagination span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.75rem;
+    height: 2.75rem;
+    padding: 0 0.875rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    text-decoration: none;
+    transition: all 150ms ease;
+    cursor: pointer;
+}
+
+.gv-widget-pagination .page-numbers:hover,
+.gravityview-pagination .page-numbers:hover,
+.gv-pagination a:hover,
+.pagination a:hover {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+    color: #111827;
+}
+
+/* Current page */
+.gv-widget-pagination .page-numbers.current,
+.gravityview-pagination .page-numbers.current,
+.gv-pagination span.current,
+.pagination .current,
+.pagination span.current {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-color: #3b82f6;
+    color: #fff;
+    font-weight: 600;
+    box-shadow: 0 4px 6px -1px rgb(59 130 246 / 0.25);
+}
+
+/* Prev/Next buttons */
+.gv-widget-pagination .prev,
+.gv-widget-pagination .next,
+.gravityview-pagination .prev,
+.gravityview-pagination .next,
+.gv-pagination .prev,
+.gv-pagination .next {
+    font-weight: 500;
+}
+
+/* Dots/Ellipsis */
+.gv-widget-pagination .dots,
+.gravityview-pagination .dots,
+.pagination .dots {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    cursor: default;
+    min-width: auto;
+    padding: 0 0.25rem;
+}
+
+.gv-widget-pagination .dots:hover,
+.gravityview-pagination .dots:hover,
+.pagination .dots:hover {
+    background: transparent;
+    border: none;
+}
+
+/* Dark mode pagination */
+.dark .gv-widget-pagination .page-numbers,
+.dark .gravityview-pagination .page-numbers,
+.dark .gv-pagination a,
+.dark .gv-pagination span,
+.dark .pagination a,
+.dark .pagination span {
+    background-color: #1f2937;
+    border-color: #374151;
+    color: #d1d5db;
+}
+
+.dark .gv-widget-pagination .page-numbers:hover,
+.dark .gravityview-pagination .page-numbers:hover,
+.dark .gv-pagination a:hover,
+.dark .pagination a:hover {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #fff;
+}
+
+.dark .gv-widget-pagination .page-numbers.current,
+.dark .gravityview-pagination .page-numbers.current,
+.dark .gv-pagination span.current,
+.dark .pagination .current {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border-color: #3b82f6;
+    color: #fff;
+}
+
+.dark .gv-widget-pagination .dots,
+.dark .gravityview-pagination .dots,
+.dark .pagination .dots {
+    background: transparent;
+    color: #6b7280;
+}
+
+/* ========================================
+   GravityView Search Widget
+   ======================================== */
+
+.gv-search-box,
+.gv-widget-search,
+.gravityview-search-widget,
+.gv-search-container {
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 1rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.dark .gv-search-box,
+.dark .gv-widget-search,
+.dark .gravityview-search-widget,
+.dark .gv-search-container {
+    background-color: #1f2937;
+    border-color: #374151;
+}
+
+/* Search form layout */
+.gv-search-box form,
+.gv-widget-search form,
+.gravityview-search-widget form {
+    display: grid;
+    gap: 1rem;
+}
+
+@media (min-width: 640px) {
+    .gv-search-box form,
+    .gv-widget-search form,
+    .gravityview-search-widget form {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (min-width: 1024px) {
+    .gv-search-box form,
+    .gv-widget-search form,
+    .gravityview-search-widget form {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Search field containers */
+.gv-search-box .gv-search-field,
+.gv-widget-search .gv-search-field,
+.gravityview-search-widget .gv-search-field,
+.gv-search-field-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+/* Search labels */
+.gv-search-box label,
+.gv-widget-search label,
+.gravityview-search-widget label,
+.gv-search-field label {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #374151;
+}
+
+.dark .gv-search-box label,
+.dark .gv-widget-search label,
+.dark .gravityview-search-widget label,
+.dark .gv-search-field label {
+    color: #d1d5db;
+}
+
+/* Search inputs */
+.gv-search-box input[type="text"],
+.gv-search-box input[type="number"],
+.gv-search-box input[type="email"],
+.gv-search-box input[type="search"],
+.gv-search-box input[type="date"],
+.gv-search-box select,
+.gv-widget-search input[type="text"],
+.gv-widget-search input[type="number"],
+.gv-widget-search input[type="email"],
+.gv-widget-search input[type="search"],
+.gv-widget-search input[type="date"],
+.gv-widget-search select,
+.gravityview-search-widget input[type="text"],
+.gravityview-search-widget input[type="number"],
+.gravityview-search-widget input[type="email"],
+.gravityview-search-widget input[type="search"],
+.gravityview-search-widget input[type="date"],
+.gravityview-search-widget select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    color: #111827;
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    outline: none;
+    transition: border-color 150ms, box-shadow 150ms;
+}
+
+.gv-search-box input:focus,
+.gv-search-box select:focus,
+.gv-widget-search input:focus,
+.gv-widget-search select:focus,
+.gravityview-search-widget input:focus,
+.gravityview-search-widget select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+}
+
+.dark .gv-search-box input[type="text"],
+.dark .gv-search-box input[type="number"],
+.dark .gv-search-box input[type="email"],
+.dark .gv-search-box input[type="search"],
+.dark .gv-search-box input[type="date"],
+.dark .gv-search-box select,
+.dark .gv-widget-search input[type="text"],
+.dark .gv-widget-search input[type="number"],
+.dark .gv-widget-search input[type="email"],
+.dark .gv-widget-search input[type="search"],
+.dark .gv-widget-search input[type="date"],
+.dark .gv-widget-search select,
+.dark .gravityview-search-widget input[type="text"],
+.dark .gravityview-search-widget input[type="number"],
+.dark .gravityview-search-widget input[type="email"],
+.dark .gravityview-search-widget input[type="search"],
+.dark .gravityview-search-widget input[type="date"],
+.dark .gravityview-search-widget select {
+    color: #f3f4f6;
+    background-color: #374151;
+    border-color: #4b5563;
+}
+
+.dark .gv-search-box input:focus,
+.dark .gv-search-box select:focus,
+.dark .gv-widget-search input:focus,
+.dark .gv-widget-search select:focus,
+.dark .gravityview-search-widget input:focus,
+.dark .gravityview-search-widget select:focus {
+    border-color: #60a5fa;
+    box-shadow: 0 0 0 3px rgb(96 165 250 / 0.2);
+}
+
+/* Search button */
+.gv-search-box input[type="submit"],
+.gv-search-box button[type="submit"],
+.gv-widget-search input[type="submit"],
+.gv-widget-search button[type="submit"],
+.gravityview-search-widget input[type="submit"],
+.gravityview-search-widget button[type="submit"],
+.gv-search-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 150ms;
+    box-shadow: 0 4px 6px -1px rgb(59 130 246 / 0.25);
+}
+
+.gv-search-box input[type="submit"]:hover,
+.gv-search-box button[type="submit"]:hover,
+.gv-widget-search input[type="submit"]:hover,
+.gv-widget-search button[type="submit"]:hover,
+.gravityview-search-widget input[type="submit"]:hover,
+.gravityview-search-widget button[type="submit"]:hover,
+.gv-search-button:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    box-shadow: 0 6px 10px -1px rgb(59 130 246 / 0.35);
+    transform: translateY(-1px);
+}
+
+/* Clear/Reset button */
+.gv-search-box input[type="reset"],
+.gv-search-box .gv-search-clear,
+.gv-widget-search input[type="reset"],
+.gv-widget-search .gv-search-clear,
+.gravityview-search-widget input[type="reset"],
+.gravityview-search-widget .gv-search-clear {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: #374151;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 150ms;
+}
+
+.gv-search-box input[type="reset"]:hover,
+.gv-search-box .gv-search-clear:hover,
+.gv-widget-search input[type="reset"]:hover,
+.gv-widget-search .gv-search-clear:hover,
+.gravityview-search-widget input[type="reset"]:hover,
+.gravityview-search-widget .gv-search-clear:hover {
+    background-color: #f3f4f6;
+    border-color: #d1d5db;
+}
+
+.dark .gv-search-box input[type="reset"],
+.dark .gv-search-box .gv-search-clear,
+.dark .gv-widget-search input[type="reset"],
+.dark .gv-widget-search .gv-search-clear,
+.dark .gravityview-search-widget input[type="reset"],
+.dark .gravityview-search-widget .gv-search-clear {
+    color: #d1d5db;
+    background-color: #374151;
+    border-color: #4b5563;
+}
+
+.dark .gv-search-box input[type="reset"]:hover,
+.dark .gv-search-box .gv-search-clear:hover,
+.dark .gv-widget-search input[type="reset"]:hover,
+.dark .gv-widget-search .gv-search-clear:hover,
+.dark .gravityview-search-widget input[type="reset"]:hover,
+.dark .gravityview-search-widget .gv-search-clear:hover {
+    background-color: #4b5563;
+}
+
+/* Search button container */
+.gv-search-box .gv-search-button-wrapper,
+.gv-widget-search .gv-search-button-wrapper,
+.gravityview-search-widget .gv-search-button-wrapper {
+    display: flex;
+    gap: 0.75rem;
+    align-items: flex-end;
+    padding-top: 0.5rem;
+}
+
+/* Branch links styling */
+.gv-search-box a,
+.gv-widget-search a,
+.gravityview-search-widget a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.gv-search-box a:hover,
+.gv-widget-search a:hover,
+.gravityview-search-widget a:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.dark .gv-search-box a,
+.dark .gv-widget-search a,
+.dark .gravityview-search-widget a {
+    color: #60a5fa;
+}
+
+.dark .gv-search-box a:hover,
+.dark .gv-widget-search a:hover,
+.dark .gravityview-search-widget a:hover {
+    color: #93c5fd;
+}
+
+/* ========================================
+   GravityView Table Styling
+   ======================================== */
+
+.gv-table-view table,
+.gv-table-container table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.gv-table-view th,
+.gv-table-container th {
+    padding: 0.875rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.dark .gv-table-view th,
+.dark .gv-table-container th {
+    color: #9ca3af;
+    background-color: #1f2937;
+    border-color: #374151;
+}
+
+.gv-table-view td,
+.gv-table-container td {
+    padding: 1rem;
+    font-size: 0.875rem;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+    vertical-align: middle;
+}
+
+.dark .gv-table-view td,
+.dark .gv-table-container td {
+    color: #d1d5db;
+    border-color: #374151;
+}
+
+.gv-table-view tbody tr:hover,
+.gv-table-container tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+.dark .gv-table-view tbody tr:hover,
+.dark .gv-table-container tbody tr:hover {
+    background-color: rgb(55 65 81 / 0.5);
+}
+
+/* Responsive table wrapper */
+.gv-table-view,
+.gv-table-container {
+    overflow-x: auto;
+}
+
+/* ========================================
+   GravityView Entry Links
+   ======================================== */
+
+.gv-table-view a,
+.gv-list-view a,
+.gv-container a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.gv-table-view a:hover,
+.gv-list-view a:hover,
+.gv-container a:hover {
+    color: #2563eb;
+    text-decoration: underline;
+}
+
+.dark .gv-table-view a,
+.dark .gv-list-view a,
+.dark .gv-container a {
+    color: #60a5fa;
+}
+
+.dark .gv-table-view a:hover,
+.dark .gv-list-view a:hover,
+.dark .gv-container a:hover {
+    color: #93c5fd;
+}
+
+/* ========================================
+   GravityView Empty Results
+   ======================================== */
+
+.gv-no-results,
+.gravityview-no-results {
+    text-align: center;
+    padding: 3rem 1.5rem;
+    color: #6b7280;
+}
+
+.dark .gv-no-results,
+.dark .gravityview-no-results {
+    color: #9ca3af;
+}
+
+/* ========================================
+   LG Flex responsive
+   ======================================== */
+
+@media (min-width: 1024px) {
+    .lg\:flex { display: flex; }
+    .lg\:flex-wrap { flex-wrap: wrap; }
+}
+
+/* ========================================
+   MD Grid cols 4
+   ======================================== */
+
+@media (min-width: 768px) {
+    .md\:grid-cols-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+
+/* ========================================
+   Responsive padding utilities
+   ======================================== */
+
+@media (min-width: 640px) {
+    .sm\:px-4 { padding-left: 1rem; padding-right: 1rem; }
+    .sm\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
+    .sm\:py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+    .sm\:py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+}
+
+/* ========================================
+   px-5 utility
+   ======================================== */
+
+.px-5 { padding-left: 1.25rem; padding-right: 1.25rem; }
+.py-5 { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+.py-6 { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+
+/* ========================================
+   Hover underline
+   ======================================== */
+
+.hover\:underline:hover {
+    text-decoration: underline;
+}

@@ -605,6 +605,8 @@ function dofs_icon(string $name, string $class = 'w-5 h-5'): string {
         'cog' => '<path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" /><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />',
         'apps' => '<path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />',
         'external-link' => '<path stroke-linecap="round" stroke-linejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />',
+        'calendar' => '<path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />',
+        'mail' => '<path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />',
     ];
 
     $path = $icons[$name] ?? $icons['document'];
@@ -879,3 +881,328 @@ function dofs_get_notification_preferences($preferences, $user_id) {
     ];
 }
 add_filter('dofs_get_user_notification_preferences', 'dofs_get_notification_preferences', 10, 2);
+
+/**
+ * =============================================================================
+ * WORKFLOW / MY TASKS
+ * =============================================================================
+ */
+
+/**
+ * Get workflow entries assigned to a user
+ *
+ * Supports:
+ * - Gravity Flow workflow steps
+ * - Custom assignee field (field with admin label containing 'assignee' or 'assigned')
+ * - Entries created by user (fallback)
+ *
+ * @param int|null $user_id User ID (defaults to current user)
+ * @param int $limit Maximum entries to return
+ * @param array $form_ids Optional specific form IDs to query
+ * @return array Array of task entries
+ */
+function dofs_get_user_workflow_tasks($user_id = null, $limit = 10, $form_ids = []): array {
+    if (!class_exists('GFAPI')) {
+        return [];
+    }
+
+    $user_id = $user_id ?: get_current_user_id();
+    if (!$user_id) {
+        return [];
+    }
+
+    $user = get_userdata($user_id);
+    if (!$user) {
+        return [];
+    }
+
+    $tasks = [];
+
+    // Get forms to search
+    $forms = GFAPI::get_forms();
+    if (empty($forms)) {
+        return [];
+    }
+
+    // Filter to specific forms if provided
+    if (!empty($form_ids)) {
+        $forms = array_filter($forms, function($form) use ($form_ids) {
+            return in_array($form['id'], $form_ids);
+        });
+    }
+
+    foreach ($forms as $form) {
+        $form_id = $form['id'];
+        $search_criteria = [];
+        $assignee_field_id = null;
+        $status_field_id = null;
+        $priority_field_id = null;
+        $due_date_field_id = null;
+        $title_field_id = null;
+
+        // Find assignee, status, priority, due date and title fields
+        foreach ($form['fields'] as $field) {
+            $admin_label = strtolower($field->adminLabel ?? '');
+            $label = strtolower($field->label ?? '');
+
+            // Assignee field detection
+            if (strpos($admin_label, 'assignee') !== false ||
+                strpos($admin_label, 'assigned') !== false ||
+                strpos($label, 'assignee') !== false ||
+                strpos($label, 'assigned to') !== false) {
+                $assignee_field_id = $field->id;
+            }
+
+            // Status/Workflow step field detection
+            if (strpos($admin_label, 'status') !== false ||
+                strpos($admin_label, 'workflow') !== false ||
+                strpos($admin_label, 'step') !== false ||
+                strpos($label, 'status') !== false) {
+                $status_field_id = $field->id;
+            }
+
+            // Priority field detection
+            if (strpos($admin_label, 'priority') !== false ||
+                strpos($label, 'priority') !== false) {
+                $priority_field_id = $field->id;
+            }
+
+            // Due date field detection
+            if (strpos($admin_label, 'due') !== false ||
+                strpos($admin_label, 'deadline') !== false ||
+                strpos($label, 'due date') !== false ||
+                strpos($label, 'deadline') !== false) {
+                $due_date_field_id = $field->id;
+            }
+
+            // Title/Subject field detection (usually first text field or one labeled as such)
+            if ($title_field_id === null && (
+                strpos($admin_label, 'title') !== false ||
+                strpos($admin_label, 'subject') !== false ||
+                strpos($admin_label, 'name') !== false ||
+                strpos($label, 'title') !== false ||
+                strpos($label, 'subject') !== false ||
+                ($field->type === 'text' && $field->id < 10)
+            )) {
+                $title_field_id = $field->id;
+            }
+        }
+
+        // Build search criteria
+        $search_criteria['status'] = 'active';
+
+        // If we have an assignee field, search by it
+        if ($assignee_field_id) {
+            // Search by user ID, email, or display name
+            $search_criteria['field_filters'] = [
+                'mode' => 'any',
+                [
+                    'key' => $assignee_field_id,
+                    'value' => $user_id,
+                ],
+                [
+                    'key' => $assignee_field_id,
+                    'value' => $user->user_email,
+                ],
+                [
+                    'key' => $assignee_field_id,
+                    'value' => $user->display_name,
+                ],
+            ];
+        } else {
+            // Fallback: entries created by this user
+            $search_criteria['field_filters'] = [
+                [
+                    'key' => 'created_by',
+                    'value' => $user_id,
+                ],
+            ];
+        }
+
+        // Get entries
+        $sorting = ['key' => 'date_created', 'direction' => 'DESC'];
+        $paging = ['offset' => 0, 'page_size' => $limit];
+
+        $entries = GFAPI::get_entries($form_id, $search_criteria, $sorting, $paging);
+
+        if (is_wp_error($entries) || empty($entries)) {
+            continue;
+        }
+
+        foreach ($entries as $entry) {
+            // Get title
+            $title = '';
+            if ($title_field_id && !empty($entry[$title_field_id])) {
+                $title = $entry[$title_field_id];
+            } else {
+                // Try to build a title from available data
+                $title = sprintf(__('Entry #%d - %s', 'dofs-theme'), $entry['id'], $form['title']);
+            }
+
+            // Get status
+            $status = 'pending';
+            if ($status_field_id && !empty($entry[$status_field_id])) {
+                $status = strtolower($entry[$status_field_id]);
+            }
+
+            // Check Gravity Flow status if available
+            if (class_exists('Gravity_Flow_API')) {
+                $gflow_api = new Gravity_Flow_API($form_id);
+                $current_step = $gflow_api->get_current_step($entry);
+                if ($current_step) {
+                    $status = $current_step->get_status();
+                }
+            }
+
+            // Get priority
+            $priority = 'medium';
+            if ($priority_field_id && !empty($entry[$priority_field_id])) {
+                $priority = strtolower($entry[$priority_field_id]);
+            }
+
+            // Get due date
+            $due_date = '';
+            $due_label = '';
+            if ($due_date_field_id && !empty($entry[$due_date_field_id])) {
+                $due_date = $entry[$due_date_field_id];
+                $due_label = dofs_format_due_date($due_date);
+            } else {
+                // Use entry date as fallback
+                $due_label = human_time_diff(strtotime($entry['date_created'])) . ' ' . __('ago', 'dofs-theme');
+            }
+
+            // Normalize priority
+            if (strpos($priority, 'high') !== false || strpos($priority, 'urgent') !== false) {
+                $priority = 'high';
+            } elseif (strpos($priority, 'low') !== false) {
+                $priority = 'low';
+            } else {
+                $priority = 'medium';
+            }
+
+            // Build entry URL
+            $entry_url = add_query_arg([
+                'page' => 'gf_entries',
+                'view' => 'entry',
+                'id' => $form_id,
+                'lid' => $entry['id'],
+            ], admin_url('admin.php'));
+
+            // Check if GravityView single entry page exists
+            $gv_url = dofs_get_gravityview_entry_url($entry['id'], $form_id);
+            if ($gv_url) {
+                $entry_url = $gv_url;
+            }
+
+            $tasks[] = [
+                'id' => $entry['id'],
+                'form_id' => $form_id,
+                'title' => $title,
+                'status' => $status,
+                'priority' => $priority,
+                'due_date' => $due_date,
+                'due_label' => $due_label,
+                'url' => $entry_url,
+                'form_title' => $form['title'],
+                'date_created' => $entry['date_created'],
+            ];
+
+            // Stop if we have enough tasks
+            if (count($tasks) >= $limit) {
+                break 2;
+            }
+        }
+    }
+
+    // Sort by date (newest first)
+    usort($tasks, function($a, $b) {
+        return strtotime($b['date_created']) - strtotime($a['date_created']);
+    });
+
+    return array_slice($tasks, 0, $limit);
+}
+
+/**
+ * Format due date for display
+ */
+function dofs_format_due_date($date): string {
+    if (empty($date)) {
+        return '';
+    }
+
+    $timestamp = strtotime($date);
+    if (!$timestamp) {
+        return $date;
+    }
+
+    $today = strtotime('today');
+    $tomorrow = strtotime('tomorrow');
+    $this_week = strtotime('+7 days');
+
+    if ($timestamp < $today) {
+        return __('Overdue', 'dofs-theme');
+    } elseif ($timestamp < $tomorrow) {
+        return __('Today', 'dofs-theme');
+    } elseif ($timestamp < strtotime('+2 days')) {
+        return __('Tomorrow', 'dofs-theme');
+    } elseif ($timestamp < $this_week) {
+        return __('This week', 'dofs-theme');
+    } else {
+        return date_i18n('M j', $timestamp);
+    }
+}
+
+/**
+ * Get GravityView single entry URL if available
+ */
+function dofs_get_gravityview_entry_url($entry_id, $form_id): ?string {
+    if (!class_exists('GravityView_View')) {
+        return null;
+    }
+
+    // Try to find a GravityView that uses this form
+    $views = get_posts([
+        'post_type' => 'gravityview',
+        'posts_per_page' => 1,
+        'meta_query' => [
+            [
+                'key' => '_gravityview_form_id',
+                'value' => $form_id,
+            ],
+        ],
+    ]);
+
+    if (empty($views)) {
+        return null;
+    }
+
+    $view = $views[0];
+    $view_url = get_permalink($view->ID);
+
+    if ($view_url) {
+        return add_query_arg('entry', $entry_id, $view_url);
+    }
+
+    return null;
+}
+
+/**
+ * Get count of pending tasks for current user
+ */
+function dofs_get_user_pending_tasks_count($user_id = null): int {
+    $tasks = dofs_get_user_workflow_tasks($user_id, 100);
+    return count(array_filter($tasks, function($task) {
+        return $task['status'] !== 'complete' && $task['status'] !== 'completed';
+    }));
+}
+
+/**
+ * =============================================================================
+ * ADMIN SETTINGS
+ * =============================================================================
+ */
+
+/**
+ * Load Admin Settings Module
+ */
+require_once DOFS_THEME_DIR . '/inc/admin-settings.php';

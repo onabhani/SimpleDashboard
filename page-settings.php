@@ -49,7 +49,7 @@ get_sidebar();
         </div>
 
         <!-- Settings Form -->
-        <form id="settings-form" method="post" class="space-y-10">
+        <form id="settings-form" method="post" class="space-y-12">
             <?php wp_nonce_field('dofs_save_settings', 'dofs_settings_nonce'); ?>
 
             <!-- Display Preferences -->

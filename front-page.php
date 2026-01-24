@@ -42,20 +42,10 @@ get_sidebar();
             <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
                 <?php
                 /**
-                 * Filter: dofs_quick_access_items
-                 * Customize Quick Access cards
-                 *
-                 * @param array $items Array of quick access items
-                 * Each item: ['id', 'title', 'icon', 'url', 'gradient', 'shadow']
+                 * Get Quick Access items from admin settings
+                 * Configure via Dashboard > DOFS Dashboard > Quick Access
                  */
-                $quick_access = apply_filters('dofs_quick_access_items', [
-                    ['id' => 'crm', 'title' => __('CRM', 'dofs-theme'), 'icon' => 'users', 'url' => home_url('/crm/'), 'gradient' => 'from-blue-500 to-blue-600', 'shadow' => 'shadow-blue-500/25'],
-                    ['id' => 'sales', 'title' => __('Sales & Orders', 'dofs-theme'), 'icon' => 'chart', 'url' => home_url('/sales/'), 'gradient' => 'from-purple-500 to-purple-600', 'shadow' => 'shadow-purple-500/25'],
-                    ['id' => 'production', 'title' => __('Production', 'dofs-theme'), 'icon' => 'factory', 'url' => home_url('/production/'), 'gradient' => 'from-orange-500 to-orange-600', 'shadow' => 'shadow-orange-500/25'],
-                    ['id' => 'warehouse', 'title' => __('Warehouse', 'dofs-theme'), 'icon' => 'warehouse', 'url' => home_url('/warehouse/'), 'gradient' => 'from-green-500 to-green-600', 'shadow' => 'shadow-green-500/25'],
-                    ['id' => 'projects', 'title' => __('Projects', 'dofs-theme'), 'icon' => 'grid', 'url' => home_url('/projects/'), 'gradient' => 'from-pink-500 to-pink-600', 'shadow' => 'shadow-pink-500/25'],
-                    ['id' => 'reports', 'title' => __('Reports', 'dofs-theme'), 'icon' => 'chart-bar', 'url' => home_url('/reports/'), 'gradient' => 'from-cyan-500 to-cyan-600', 'shadow' => 'shadow-cyan-500/25'],
-                ]);
+                $quick_access = apply_filters('dofs_quick_access_items', dofs_get_configured_quick_access());
 
                 // Filter out hidden items based on user settings
                 $hidden_items = get_user_meta(get_current_user_id(), 'dofs_quick_access_hidden', true);
@@ -88,15 +78,11 @@ get_sidebar();
             </h2>
             <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:flex lg:flex-wrap gap-2 sm:gap-3">
                 <?php
-                $quick_actions = apply_filters('dofs_quick_actions', [
-                    ['title' => __('All Orders', 'dofs-theme'), 'url' => home_url('/sales/orders/'), 'icon' => 'chart'],
-                    ['title' => __('New Customer', 'dofs-theme'), 'url' => home_url('/crm/new-customer/'), 'icon' => 'users'],
-                    ['title' => __('New Entry', 'dofs-theme'), 'url' => home_url('/crm/new-entry/'), 'icon' => 'document'],
-                    ['title' => __('New Invoice', 'dofs-theme'), 'url' => home_url('/crm/new-invoice/'), 'icon' => 'cart'],
-                    ['title' => __('New Project', 'dofs-theme'), 'url' => home_url('/projects/new/'), 'icon' => 'grid'],
-                    ['title' => __('New Maintenance', 'dofs-theme'), 'url' => home_url('/maintenance/new/'), 'icon' => 'tool'],
-                    ['title' => __('View Reports', 'dofs-theme'), 'url' => home_url('/reports/'), 'icon' => 'chart-bar'],
-                ]);
+                /**
+                 * Get Quick Actions from admin settings
+                 * Configure via Dashboard > DOFS Dashboard > Quick Actions
+                 */
+                $quick_actions = apply_filters('dofs_quick_actions', dofs_get_configured_quick_actions());
 
                 foreach ($quick_actions as $action):
                 ?>
@@ -206,47 +192,84 @@ get_sidebar();
             </section>
 
             <!-- My Tasks -->
+            <?php
+            /**
+             * Get workflow entries assigned to current user
+             * This fetches actual entries from Gravity Forms where user is assigned
+             *
+             * Configure form fields with admin labels:
+             * - "assignee" or "assigned" - User assigned to the task
+             * - "status" or "workflow" - Current status/step
+             * - "priority" - Task priority (high, medium, low)
+             * - "due" or "deadline" - Due date
+             * - "title" or "subject" - Task title/name
+             */
+            $workflow_tasks = dofs_get_user_workflow_tasks(null, 5);
+            $pending_count = count(array_filter($workflow_tasks, function($task) {
+                return !in_array($task['status'], ['complete', 'completed', 'done', 'closed']);
+            }));
+
+            $priority_classes = [
+                'high' => 'bg-red-500',
+                'medium' => 'bg-yellow-500',
+                'low' => 'bg-gray-400',
+            ];
+            ?>
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 min-w-0 overflow-hidden">
                 <div class="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                         <?php esc_html_e('My Tasks', 'dofs-theme'); ?>
                     </h2>
+                    <?php if ($pending_count > 0): ?>
                     <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400">
-                        5 <?php esc_html_e('pending', 'dofs-theme'); ?>
+                        <?php echo esc_html($pending_count); ?> <?php esc_html_e('pending', 'dofs-theme'); ?>
                     </span>
+                    <?php endif; ?>
                 </div>
                 <div class="p-4 sm:p-5 space-y-3">
-                    <?php
-                    $tasks = [
-                        ['title' => __('Review leave request - Ahmed', 'dofs-theme'), 'priority' => 'high', 'due' => __('Today', 'dofs-theme')],
-                        ['title' => __('Approve purchase order #PO-234', 'dofs-theme'), 'priority' => 'medium', 'due' => __('Tomorrow', 'dofs-theme')],
-                        ['title' => __('Monthly sales report review', 'dofs-theme'), 'priority' => 'low', 'due' => __('This week', 'dofs-theme')],
-                        ['title' => __('Team performance reviews', 'dofs-theme'), 'priority' => 'medium', 'due' => __('Jan 20', 'dofs-theme')],
-                        ['title' => __('Inventory audit preparation', 'dofs-theme'), 'priority' => 'low', 'due' => __('Jan 25', 'dofs-theme')],
-                    ];
-
-                    $priority_classes = [
-                        'high' => 'bg-red-500',
-                        'medium' => 'bg-yellow-500',
-                        'low' => 'bg-gray-400',
-                    ];
-
-                    foreach ($tasks as $task):
-                    ?>
-                    <div class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer">
-                        <div class="flex-shrink-0 mt-1.5">
-                            <div class="w-2 h-2 rounded-full <?php echo esc_attr($priority_classes[$task['priority']]); ?>"></div>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
-                                <?php echo esc_html($task['title']); ?>
+                    <?php if (!empty($workflow_tasks)): ?>
+                        <?php foreach ($workflow_tasks as $task): ?>
+                        <a href="<?php echo esc_url($task['url']); ?>" class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer group">
+                            <div class="flex-shrink-0 mt-1.5">
+                                <div class="w-2 h-2 rounded-full <?php echo esc_attr($priority_classes[$task['priority']] ?? 'bg-gray-400'); ?>"></div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400">
+                                    <?php echo esc_html($task['title']); ?>
+                                </p>
+                                <div class="flex items-center gap-2 mt-0.5">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                                        <?php if (!empty($task['due_label'])): ?>
+                                            <?php esc_html_e('Due:', 'dofs-theme'); ?> <?php echo esc_html($task['due_label']); ?>
+                                        <?php else: ?>
+                                            <?php echo esc_html($task['form_title']); ?>
+                                        <?php endif; ?>
+                                    </p>
+                                    <?php if ($task['status'] && $task['status'] !== 'pending'): ?>
+                                    <span class="text-xs px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                                        <?php echo esc_html(ucfirst($task['status'])); ?>
+                                    </span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <?php echo dofs_icon('chevron-down', 'w-4 h-4 text-gray-400 -rotate-90'); ?>
+                            </div>
+                        </a>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center py-8">
+                            <div class="w-12 h-12 mx-auto rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-3">
+                                <?php echo dofs_icon('tasks', 'w-6 h-6 text-gray-400'); ?>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                <?php esc_html_e('No tasks assigned to you', 'dofs-theme'); ?>
                             </p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                <?php esc_html_e('Due:', 'dofs-theme'); ?> <?php echo esc_html($task['due']); ?>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                                <?php esc_html_e('Tasks will appear here when assigned', 'dofs-theme'); ?>
                             </p>
                         </div>
-                    </div>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
                 <div class="p-4 sm:p-5 pt-0">
                     <a href="<?php echo esc_url(home_url('/tasks/')); ?>" class="block w-full py-2.5 text-center text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 rounded-xl hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors">
