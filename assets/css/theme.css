@@ -1895,6 +1895,116 @@ nav.pagination {
 }
 
 /* ========================================
+   Gravity Flow Field Value - JSON Data Handling
+   ======================================== */
+
+/* Fix for JSON data overflow in field values */
+.gravityflow-field-value,
+.gravityflow-entry-detail .gravityflow-field-value,
+.gflow-field-value {
+    word-break: break-all;
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+    max-width: 100%;
+    overflow-x: auto;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    padding: 0.75rem;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+.dark .gravityflow-field-value,
+.dark .gravityflow-entry-detail .gravityflow-field-value,
+.dark .gflow-field-value {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #d1d5db;
+}
+
+/* Better handling of long JSON strings */
+.gravityflow-field-value:has(> :first-child:last-child),
+.gravityflow-entry-detail td > .gravityflow-field-value {
+    display: block;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* Field label styling */
+.gravityflow-field-label,
+.gflow-field-label {
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.875rem;
+    margin-bottom: 0.25rem;
+}
+
+.dark .gravityflow-field-label,
+.dark .gflow-field-label {
+    color: #e5e7eb;
+}
+
+/* Entry detail container - ensure proper layout */
+.gravityflow-entry-detail,
+.gflow-entry-detail {
+    max-width: 100%;
+    overflow-x: hidden;
+}
+
+/* Table cells containing field values */
+.gravityflow-entry-detail td:has(.gravityflow-field-value),
+.gravityflow-entry-detail td .gravityflow-field-value {
+    max-width: none;
+    overflow: visible;
+}
+
+/* Responsive table wrapper */
+.gravityflow-entry-detail table {
+    table-layout: fixed;
+    width: 100%;
+}
+
+.gravityflow-entry-detail td,
+.gravityflow-entry-detail th {
+    vertical-align: top;
+}
+
+/* First column (labels) fixed width */
+.gravityflow-entry-detail td:first-child,
+.gravityflow-entry-detail th:first-child {
+    width: 30%;
+    min-width: 120px;
+}
+
+/* Second column (values) flexible */
+.gravityflow-entry-detail td:last-child,
+.gravityflow-entry-detail th:last-child {
+    width: 70%;
+}
+
+/* Mobile responsive */
+@media (max-width: 640px) {
+    .gravityflow-field-value,
+    .gravityflow-entry-detail .gravityflow-field-value {
+        font-size: 0.6875rem;
+        padding: 0.5rem;
+        max-height: 150px;
+    }
+
+    .gravityflow-entry-detail td:first-child,
+    .gravityflow-entry-detail th:first-child {
+        width: 40%;
+    }
+
+    .gravityflow-entry-detail td:last-child,
+    .gravityflow-entry-detail th:last-child {
+        width: 60%;
+    }
+}
+
+/* ========================================
    Sticky Sidebar
    ======================================== */
 
