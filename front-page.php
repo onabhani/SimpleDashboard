@@ -192,47 +192,84 @@ get_sidebar();
             </section>
 
             <!-- My Tasks -->
+            <?php
+            /**
+             * Get workflow entries assigned to current user
+             * This fetches actual entries from Gravity Forms where user is assigned
+             *
+             * Configure form fields with admin labels:
+             * - "assignee" or "assigned" - User assigned to the task
+             * - "status" or "workflow" - Current status/step
+             * - "priority" - Task priority (high, medium, low)
+             * - "due" or "deadline" - Due date
+             * - "title" or "subject" - Task title/name
+             */
+            $workflow_tasks = dofs_get_user_workflow_tasks(null, 5);
+            $pending_count = count(array_filter($workflow_tasks, function($task) {
+                return !in_array($task['status'], ['complete', 'completed', 'done', 'closed']);
+            }));
+
+            $priority_classes = [
+                'high' => 'bg-red-500',
+                'medium' => 'bg-yellow-500',
+                'low' => 'bg-gray-400',
+            ];
+            ?>
             <section class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700 min-w-0 overflow-hidden">
                 <div class="flex items-center justify-between p-4 sm:p-5 border-b border-gray-200 dark:border-gray-700">
                     <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
                         <?php esc_html_e('My Tasks', 'dofs-theme'); ?>
                     </h2>
+                    <?php if ($pending_count > 0): ?>
                     <span class="px-2.5 py-1 text-xs font-medium rounded-lg bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-400">
-                        5 <?php esc_html_e('pending', 'dofs-theme'); ?>
+                        <?php echo esc_html($pending_count); ?> <?php esc_html_e('pending', 'dofs-theme'); ?>
                     </span>
+                    <?php endif; ?>
                 </div>
                 <div class="p-4 sm:p-5 space-y-3">
-                    <?php
-                    $tasks = [
-                        ['title' => __('Review leave request - Ahmed', 'dofs-theme'), 'priority' => 'high', 'due' => __('Today', 'dofs-theme')],
-                        ['title' => __('Approve purchase order #PO-234', 'dofs-theme'), 'priority' => 'medium', 'due' => __('Tomorrow', 'dofs-theme')],
-                        ['title' => __('Monthly sales report review', 'dofs-theme'), 'priority' => 'low', 'due' => __('This week', 'dofs-theme')],
-                        ['title' => __('Team performance reviews', 'dofs-theme'), 'priority' => 'medium', 'due' => __('Jan 20', 'dofs-theme')],
-                        ['title' => __('Inventory audit preparation', 'dofs-theme'), 'priority' => 'low', 'due' => __('Jan 25', 'dofs-theme')],
-                    ];
-
-                    $priority_classes = [
-                        'high' => 'bg-red-500',
-                        'medium' => 'bg-yellow-500',
-                        'low' => 'bg-gray-400',
-                    ];
-
-                    foreach ($tasks as $task):
-                    ?>
-                    <div class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer">
-                        <div class="flex-shrink-0 mt-1.5">
-                            <div class="w-2 h-2 rounded-full <?php echo esc_attr($priority_classes[$task['priority']]); ?>"></div>
-                        </div>
-                        <div class="flex-1 min-w-0">
-                            <p class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2">
-                                <?php echo esc_html($task['title']); ?>
+                    <?php if (!empty($workflow_tasks)): ?>
+                        <?php foreach ($workflow_tasks as $task): ?>
+                        <a href="<?php echo esc_url($task['url']); ?>" class="flex items-start gap-3 p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors cursor-pointer group">
+                            <div class="flex-shrink-0 mt-1.5">
+                                <div class="w-2 h-2 rounded-full <?php echo esc_attr($priority_classes[$task['priority']] ?? 'bg-gray-400'); ?>"></div>
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="text-sm font-medium text-gray-900 dark:text-white line-clamp-2 group-hover:text-primary-600 dark:group-hover:text-primary-400">
+                                    <?php echo esc_html($task['title']); ?>
+                                </p>
+                                <div class="flex items-center gap-2 mt-0.5">
+                                    <p class="text-xs text-gray-500 dark:text-gray-400">
+                                        <?php if (!empty($task['due_label'])): ?>
+                                            <?php esc_html_e('Due:', 'dofs-theme'); ?> <?php echo esc_html($task['due_label']); ?>
+                                        <?php else: ?>
+                                            <?php echo esc_html($task['form_title']); ?>
+                                        <?php endif; ?>
+                                    </p>
+                                    <?php if ($task['status'] && $task['status'] !== 'pending'): ?>
+                                    <span class="text-xs px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400">
+                                        <?php echo esc_html(ucfirst($task['status'])); ?>
+                                    </span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                            <div class="flex-shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
+                                <?php echo dofs_icon('chevron-down', 'w-4 h-4 text-gray-400 -rotate-90'); ?>
+                            </div>
+                        </a>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center py-8">
+                            <div class="w-12 h-12 mx-auto rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mb-3">
+                                <?php echo dofs_icon('tasks', 'w-6 h-6 text-gray-400'); ?>
+                            </div>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">
+                                <?php esc_html_e('No tasks assigned to you', 'dofs-theme'); ?>
                             </p>
-                            <p class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
-                                <?php esc_html_e('Due:', 'dofs-theme'); ?> <?php echo esc_html($task['due']); ?>
+                            <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">
+                                <?php esc_html_e('Tasks will appear here when assigned', 'dofs-theme'); ?>
                             </p>
                         </div>
-                    </div>
-                    <?php endforeach; ?>
+                    <?php endif; ?>
                 </div>
                 <div class="p-4 sm:p-5 pt-0">
                     <a href="<?php echo esc_url(home_url('/tasks/')); ?>" class="block w-full py-2.5 text-center text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-900/20 rounded-xl hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-colors">
