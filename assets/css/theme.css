@@ -1578,3 +1578,353 @@ nav.pagination {
 .hover\:underline:hover {
     text-decoration: underline;
 }
+
+/* ========================================
+   Gravity Flow Inbox Styling
+   ======================================== */
+
+/* Gravity Flow inbox container */
+.gravityflow-inbox,
+.gravityflow-status,
+.gravityflow-submit,
+#gravityflow-inbox,
+.gflow-inbox {
+    background-color: #fff;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.dark .gravityflow-inbox,
+.dark .gravityflow-status,
+.dark .gravityflow-submit,
+.dark #gravityflow-inbox,
+.dark .gflow-inbox {
+    background-color: #1f2937;
+    border-color: #374151;
+}
+
+/* Gravity Flow entry detail */
+.gravityflow-entry-detail,
+.gravityflow-detail,
+.gflow-entry-detail {
+    background-color: #fff;
+    border-radius: 1rem;
+    border: 1px solid #e5e7eb;
+    padding: 1.5rem;
+    overflow-x: auto;
+}
+
+.dark .gravityflow-entry-detail,
+.dark .gravityflow-detail,
+.dark .gflow-entry-detail {
+    background-color: #1f2937;
+    border-color: #374151;
+}
+
+/* Gravity Flow entry info box */
+.gravityflow-entry-detail .gform_wrapper,
+.gravityflow-entry-detail .entry-detail-view,
+.gflow-entry-info {
+    background-color: #f9fafb;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+.dark .gravityflow-entry-detail .gform_wrapper,
+.dark .gravityflow-entry-detail .entry-detail-view,
+.dark .gflow-entry-info {
+    background-color: #374151;
+}
+
+/* Gravity Flow workflow timeline */
+.gravityflow-workflow-timeline,
+.gflow-timeline,
+.workflow-timeline {
+    border-left: 2px solid #e5e7eb;
+    margin-left: 1rem;
+    padding-left: 1.5rem;
+}
+
+.dark .gravityflow-workflow-timeline,
+.dark .gflow-timeline,
+.dark .workflow-timeline {
+    border-color: #374151;
+}
+
+/* Timeline items */
+.gravityflow-workflow-timeline .timeline-item,
+.gflow-timeline .timeline-item,
+.workflow-timeline li {
+    position: relative;
+    padding-bottom: 1.5rem;
+}
+
+.gravityflow-workflow-timeline .timeline-item::before,
+.gflow-timeline .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -1.75rem;
+    top: 0.25rem;
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 50%;
+    background-color: #3b82f6;
+    border: 2px solid #fff;
+}
+
+.dark .gravityflow-workflow-timeline .timeline-item::before,
+.dark .gflow-timeline .timeline-item::before {
+    border-color: #1f2937;
+}
+
+/* Gravity Flow form fields */
+.gravityflow-entry-detail input[type="text"],
+.gravityflow-entry-detail input[type="email"],
+.gravityflow-entry-detail input[type="number"],
+.gravityflow-entry-detail textarea,
+.gravityflow-entry-detail select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    font-size: 0.9375rem;
+    color: #111827;
+    background-color: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    outline: none;
+    transition: border-color 150ms, box-shadow 150ms;
+}
+
+.gravityflow-entry-detail input:focus,
+.gravityflow-entry-detail textarea:focus,
+.gravityflow-entry-detail select:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+}
+
+.dark .gravityflow-entry-detail input[type="text"],
+.dark .gravityflow-entry-detail input[type="email"],
+.dark .gravityflow-entry-detail input[type="number"],
+.dark .gravityflow-entry-detail textarea,
+.dark .gravityflow-entry-detail select {
+    color: #f3f4f6;
+    background-color: #374151;
+    border-color: #4b5563;
+}
+
+/* Gravity Flow submit button */
+.gravityflow-entry-detail input[type="submit"],
+.gravityflow-entry-detail button[type="submit"],
+.gflow-submit-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 150ms;
+    box-shadow: 0 4px 6px -1px rgb(59 130 246 / 0.25);
+}
+
+.gravityflow-entry-detail input[type="submit"]:hover,
+.gravityflow-entry-detail button[type="submit"]:hover,
+.gflow-submit-btn:hover {
+    background: linear-gradient(135deg, #2563eb, #1d4ed8);
+    transform: translateY(-1px);
+}
+
+/* Gravity Flow entry data table */
+.gravityflow-entry-detail table,
+.gflow-entry-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+}
+
+.gravityflow-entry-detail th,
+.gflow-entry-table th {
+    padding: 0.75rem 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: #6b7280;
+    background-color: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+}
+
+.dark .gravityflow-entry-detail th,
+.dark .gflow-entry-table th {
+    color: #9ca3af;
+    background-color: #1f2937;
+    border-color: #374151;
+}
+
+.gravityflow-entry-detail td,
+.gflow-entry-table td {
+    padding: 0.75rem 1rem;
+    font-size: 0.875rem;
+    color: #374151;
+    border-bottom: 1px solid #e5e7eb;
+    word-break: break-word;
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.dark .gravityflow-entry-detail td,
+.dark .gflow-entry-table td {
+    color: #d1d5db;
+    border-color: #374151;
+}
+
+/* Fix for long content in entry fields */
+.gravityflow-entry-detail pre,
+.gravityflow-entry-detail code,
+.gflow-entry-detail pre,
+.gflow-entry-detail code {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    word-break: break-all;
+    max-width: 100%;
+    overflow-x: auto;
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    background-color: #f3f4f6;
+    border-radius: 0.5rem;
+}
+
+.dark .gravityflow-entry-detail pre,
+.dark .gravityflow-entry-detail code,
+.dark .gflow-entry-detail pre,
+.dark .gflow-entry-detail code {
+    background-color: #374151;
+    color: #d1d5db;
+}
+
+/* Entry notes/comments styling */
+.gravityflow-workflow-detail .workflow-entry-notes,
+.gflow-notes {
+    background-color: #f9fafb;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin: 1rem 0;
+}
+
+.dark .gravityflow-workflow-detail .workflow-entry-notes,
+.dark .gflow-notes {
+    background-color: #374151;
+}
+
+/* Assignee info box */
+.gravityflow-workflow-detail .assignees,
+.gflow-assignees {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+
+.gravityflow-workflow-detail .assignee,
+.gflow-assignee {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    background-color: #dbeafe;
+    color: #1e40af;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.dark .gravityflow-workflow-detail .assignee,
+.dark .gflow-assignee {
+    background-color: rgb(30 58 138 / 0.3);
+    color: #93c5fd;
+}
+
+/* Status badges */
+.gravityflow-status-badge,
+.gflow-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.gravityflow-status-pending,
+.gflow-status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.dark .gravityflow-status-pending,
+.dark .gflow-status-pending {
+    background-color: rgb(146 64 14 / 0.3);
+    color: #fcd34d;
+}
+
+.gravityflow-status-complete,
+.gflow-status-complete {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.dark .gravityflow-status-complete,
+.dark .gflow-status-complete {
+    background-color: rgb(6 95 70 / 0.3);
+    color: #6ee7b7;
+}
+
+/* Fix rotation utility */
+.-rotate-90 {
+    transform: rotate(-90deg);
+}
+
+/* ========================================
+   Sticky Sidebar
+   ======================================== */
+
+@media (min-width: 1024px) {
+    .lg\:sticky {
+        position: sticky !important;
+    }
+
+    .lg\:top-0 {
+        top: 0 !important;
+    }
+
+    .lg\:h-screen {
+        height: 100vh !important;
+    }
+
+    .lg\:overflow-y-auto {
+        overflow-y: auto !important;
+    }
+
+    /* Adjust sidebar for admin bar */
+    body.admin-bar #sidebar {
+        top: 32px !important;
+        height: calc(100vh - 32px) !important;
+    }
+}
+
+@media (min-width: 1024px) and (max-width: 782px) {
+    body.admin-bar #sidebar {
+        top: 46px !important;
+        height: calc(100vh - 46px) !important;
+    }
+}
