@@ -1898,42 +1898,73 @@ nav.pagination {
    Gravity Flow Field Value - JSON Data Handling
    ======================================== */
 
-/* Fix for JSON data overflow in field values */
+/* Fix for JSON data overflow in field values - targeting all contexts */
 .gravityflow-field-value,
+.gform_wrapper .gravityflow-field-value,
+.gfield .gravityflow-field-value,
+.gravityflow-display-field .gravityflow-field-value,
 .gravityflow-entry-detail .gravityflow-field-value,
 .gflow-field-value {
-    word-break: break-all;
-    overflow-wrap: break-word;
-    white-space: pre-wrap;
-    max-width: 100%;
-    overflow-x: auto;
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
-    font-size: 0.75rem;
-    line-height: 1.5;
-    padding: 0.75rem;
-    background-color: #f3f4f6;
-    border-radius: 0.5rem;
-    border: 1px solid #e5e7eb;
+    word-break: break-all !important;
+    overflow-wrap: break-word !important;
+    white-space: pre-wrap !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    display: block !important;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace !important;
+    font-size: 0.75rem !important;
+    line-height: 1.5 !important;
+    padding: 0.75rem !important;
+    background-color: #f3f4f6 !important;
+    border-radius: 0.5rem !important;
+    border: 1px solid #e5e7eb !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
 }
 
 .dark .gravityflow-field-value,
+.dark .gform_wrapper .gravityflow-field-value,
+.dark .gfield .gravityflow-field-value,
+.dark .gravityflow-display-field .gravityflow-field-value,
 .dark .gravityflow-entry-detail .gravityflow-field-value,
 .dark .gflow-field-value {
-    background-color: #374151;
-    border-color: #4b5563;
-    color: #d1d5db;
+    background-color: #374151 !important;
+    border-color: #4b5563 !important;
+    color: #d1d5db !important;
 }
 
-/* Better handling of long JSON strings */
-.gravityflow-field-value:has(> :first-child:last-child),
-.gravityflow-entry-detail td > .gravityflow-field-value {
-    display: block;
-    max-height: 200px;
-    overflow-y: auto;
+/* Gravity Forms wrapper - constrain width */
+.gform_wrapper,
+.gform_wrapper.gravity-theme {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+/* Gravity Forms fields grid - prevent overflow */
+.gform_wrapper .gform_fields,
+.gform_wrapper .gform-body {
+    max-width: 100% !important;
+    overflow-x: hidden !important;
+}
+
+/* Individual field containers */
+.gform_wrapper .gfield,
+.gform_wrapper .gfield.gravityflow-display-field {
+    max-width: 100% !important;
+    overflow: hidden !important;
+}
+
+/* Quality checklist field specifically */
+.gform_wrapper .gfield--type-quality_checklist,
+.gform_wrapper [class*="quality_checklist"] {
+    max-width: 100% !important;
+    overflow: hidden !important;
 }
 
 /* Field label styling */
 .gravityflow-field-label,
+.gfield_label,
+.gform-field-label,
 .gflow-field-label {
     font-weight: 600;
     color: #374151;
@@ -1942,6 +1973,8 @@ nav.pagination {
 }
 
 .dark .gravityflow-field-label,
+.dark .gfield_label,
+.dark .gform-field-label,
 .dark .gflow-field-label {
     color: #e5e7eb;
 }
@@ -1953,15 +1986,9 @@ nav.pagination {
     overflow-x: hidden;
 }
 
-/* Table cells containing field values */
-.gravityflow-entry-detail td:has(.gravityflow-field-value),
-.gravityflow-entry-detail td .gravityflow-field-value {
-    max-width: none;
-    overflow: visible;
-}
-
 /* Responsive table wrapper */
-.gravityflow-entry-detail table {
+.gravityflow-entry-detail table,
+.gform_wrapper table {
     table-layout: fixed;
     width: 100%;
 }
@@ -1987,10 +2014,12 @@ nav.pagination {
 /* Mobile responsive */
 @media (max-width: 640px) {
     .gravityflow-field-value,
+    .gform_wrapper .gravityflow-field-value,
+    .gfield .gravityflow-field-value,
     .gravityflow-entry-detail .gravityflow-field-value {
-        font-size: 0.6875rem;
-        padding: 0.5rem;
-        max-height: 150px;
+        font-size: 0.6875rem !important;
+        padding: 0.5rem !important;
+        max-height: 150px !important;
     }
 
     .gravityflow-entry-detail td:first-child,
