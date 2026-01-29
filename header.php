@@ -289,4 +289,4 @@
     </div>
 
     <!-- Main layout with sidebar -->
-    <div class="flex flex-1 overflow-hidden">
+    <div id="main-layout" class="flex flex-1 overflow-hidden">

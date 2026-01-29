@@ -17,16 +17,18 @@
     });
 
     /**
-     * Sidebar Toggle (Mobile)
+     * Sidebar Toggle (Mobile + Desktop Collapse)
      */
     function initSidebar() {
         const sidebar = document.getElementById('sidebar');
         const backdrop = document.getElementById('sidebar-backdrop');
         const toggleBtn = document.getElementById('sidebar-toggle');
         const closeBtn = document.getElementById('sidebar-close');
+        const collapseBtn = document.getElementById('sidebar-collapse-toggle');
 
         if (!sidebar) return;
 
+        // --- Mobile sidebar open/close ---
         function openSidebar() {
             sidebar.classList.remove('-translate-x-full');
             sidebar.classList.add('translate-x-0');
@@ -59,17 +61,69 @@
 
         // Close on escape key
         document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape' && !sidebar.classList.contains('-translate-x-full')) {
-                closeSidebar();
+            if (e.key === 'Escape') {
+                // Close mobile sidebar if open on mobile
+                if (window.innerWidth < 1024 && !sidebar.classList.contains('-translate-x-full')) {
+                    closeSidebar();
+                }
             }
         });
 
-        // Close on window resize to desktop
+        // Close mobile overlay on window resize to desktop
         window.addEventListener('resize', function() {
             if (window.innerWidth >= 1024) {
                 closeSidebar();
             }
         });
+
+        // --- Desktop sidebar collapse/expand ---
+        function isCollapsed() {
+            return sidebar.classList.contains('sidebar-collapsed');
+        }
+
+        function collapseSidebar() {
+            sidebar.classList.add('sidebar-collapsed');
+            document.body.classList.add('sidebar-is-collapsed');
+            localStorage.setItem('dofs-sidebar-collapsed', '1');
+
+            // Update icons
+            var collapseIcon = sidebar.querySelector('.sidebar-collapse-icon');
+            var expandIcon = sidebar.querySelector('.sidebar-expand-icon');
+            if (collapseIcon) collapseIcon.classList.add('hidden');
+            if (expandIcon) expandIcon.classList.remove('hidden');
+        }
+
+        function expandSidebar() {
+            sidebar.classList.remove('sidebar-collapsed');
+            document.body.classList.remove('sidebar-is-collapsed');
+            localStorage.setItem('dofs-sidebar-collapsed', '0');
+
+            // Update icons
+            var collapseIcon = sidebar.querySelector('.sidebar-collapse-icon');
+            var expandIcon = sidebar.querySelector('.sidebar-expand-icon');
+            if (collapseIcon) collapseIcon.classList.remove('hidden');
+            if (expandIcon) expandIcon.classList.add('hidden');
+        }
+
+        function toggleCollapse() {
+            if (isCollapsed()) {
+                expandSidebar();
+            } else {
+                collapseSidebar();
+            }
+        }
+
+        if (collapseBtn) {
+            collapseBtn.addEventListener('click', toggleCollapse);
+        }
+
+        // Restore saved collapse state on desktop
+        if (window.innerWidth >= 1024) {
+            var savedState = localStorage.getItem('dofs-sidebar-collapsed');
+            if (savedState === '1') {
+                collapseSidebar();
+            }
+        }
     }
 
     /**

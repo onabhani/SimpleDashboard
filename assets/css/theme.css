@@ -2034,36 +2034,85 @@ nav.pagination {
 }
 
 /* ========================================
-   Sticky Sidebar
+   Sidebar - Responsive & Collapsible
    ======================================== */
 
+/* Desktop: sidebar in normal flow within flex container */
 @media (min-width: 1024px) {
-    .lg\:sticky {
-        position: sticky !important;
+    #sidebar {
+        position: relative !important;
+        transform: none !important;
+        min-height: calc(100vh - 4rem);
+        overflow-y: auto;
     }
 
-    .lg\:top-0 {
-        top: 0 !important;
+    /* Main content fills remaining space */
+    #main-layout > main {
+        min-width: 0; /* Prevent flex overflow */
     }
 
-    .lg\:h-screen {
-        height: 100vh !important;
-    }
-
-    .lg\:overflow-y-auto {
-        overflow-y: auto !important;
-    }
-
-    /* Adjust sidebar for admin bar */
+    /* Adjust for admin bar */
     body.admin-bar #sidebar {
-        top: 32px !important;
-        height: calc(100vh - 32px) !important;
+        min-height: calc(100vh - 4rem - 32px);
     }
 }
 
 @media (min-width: 1024px) and (max-width: 782px) {
     body.admin-bar #sidebar {
-        top: 46px !important;
-        height: calc(100vh - 46px) !important;
+        min-height: calc(100vh - 4rem - 46px);
+    }
+}
+
+/* --- Collapsed Sidebar (Desktop Only) --- */
+@media (min-width: 1024px) {
+    #sidebar.sidebar-collapsed {
+        width: 4.5rem; /* 72px - enough for icons + padding */
+    }
+
+    /* Hide text labels when collapsed */
+    #sidebar.sidebar-collapsed .sidebar-label {
+        display: none;
+    }
+
+    /* Show the collapsed section indicator (horizontal line) */
+    #sidebar.sidebar-collapsed .sidebar-collapsed-indicator {
+        display: block !important;
+    }
+
+    /* Center section titles in collapsed state */
+    #sidebar.sidebar-collapsed .sidebar-section-title {
+        text-align: center;
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Center links in collapsed state */
+    #sidebar.sidebar-collapsed .sidebar-link {
+        justify-content: center;
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        gap: 0;
+    }
+
+    /* Collapse toggle button centering */
+    #sidebar.sidebar-collapsed #sidebar-collapse-toggle {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
+    /* Footer content - center icon when collapsed */
+    #sidebar.sidebar-collapsed .sidebar-footer-content {
+        justify-content: center;
+        padding: 0.5rem;
+    }
+
+    /* Smooth width transition */
+    #sidebar {
+        transition: width 200ms ease-in-out;
+    }
+
+    /* Tooltip on hover for collapsed items */
+    #sidebar.sidebar-collapsed .sidebar-link {
+        position: relative;
     }
 }
