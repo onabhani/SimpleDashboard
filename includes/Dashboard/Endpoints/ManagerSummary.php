@@ -40,7 +40,7 @@ class ManagerSummary {
         if (!is_user_logged_in()) {
             return new \WP_Error(
                 'rest_not_logged_in',
-                __('You must be logged in to access this endpoint.', 'simple-hr-suite'),
+                __('You must be logged in to access this endpoint.', 'dofs-theme'),
                 ['status' => 401]
             );
         }
@@ -48,7 +48,7 @@ class ManagerSummary {
         if (!current_user_can('sfs_hr.view_dashboard_manager')) {
             return new \WP_Error(
                 'rest_forbidden',
-                __('You do not have permission to access this endpoint.', 'simple-hr-suite'),
+                __('You do not have permission to access this endpoint.', 'dofs-theme'),
                 ['status' => 403]
             );
         }
@@ -138,11 +138,12 @@ class ManagerSummary {
         $now = current_time('H:i');
         $hour = (int) current_time('G');
 
-        // Determine status based on time (mock logic)
+        // Determine status based on time (mock logic - deterministic per user/hour)
         $status = 'present';
         $status_label = 'On duty';
-        $first_punch = sprintf('%02d:%02d', max(7, min(9, $hour - rand(0, 2))), rand(0, 59));
-        $last_punch = $hour > 12 ? sprintf('%02d:%02d', min($hour, 17), rand(0, 59)) : null;
+        $seed = $user_id + $hour;
+        $first_punch = sprintf('%02d:%02d', max(7, min(9, $hour - ($seed % 3))), ($seed * 7) % 60);
+        $last_punch = $hour > 12 ? sprintf('%02d:%02d', min($hour, 17), ($seed * 13) % 60) : null;
 
         // Apply filter for actual HR system integration
         return apply_filters('sfs_hr_my_status', [

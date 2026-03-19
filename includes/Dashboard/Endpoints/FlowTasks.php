@@ -33,7 +33,7 @@ class FlowTasks {
         if (!is_user_logged_in()) {
             return new \WP_Error(
                 'rest_not_logged_in',
-                __('You must be logged in to access this endpoint.', 'simple-hr-suite'),
+                __('You must be logged in to access this endpoint.', 'dofs-theme'),
                 ['status' => 401]
             );
         }
@@ -41,7 +41,7 @@ class FlowTasks {
         if (!current_user_can('sfs_hr.view_self')) {
             return new \WP_Error(
                 'rest_forbidden',
-                __('You do not have permission to view tasks.', 'simple-hr-suite'),
+                __('You do not have permission to view tasks.', 'dofs-theme'),
                 ['status' => 403]
             );
         }
@@ -100,15 +100,12 @@ class FlowTasks {
             foreach ($forms as $form) {
                 $form_id = $form['id'];
 
-                // Get entries where user has pending steps
+                // Get active entries (limit to prevent memory issues)
                 $search_criteria = [
                     'status' => 'active',
-                    'field_filters' => [
-                        'mode' => 'any',
-                    ],
                 ];
 
-                $entries = \GFAPI::get_entries($form_id, $search_criteria);
+                $entries = \GFAPI::get_entries($form_id, $search_criteria, null, ['offset' => 0, 'page_size' => 50]);
 
                 foreach ($entries as $entry) {
                     $current_step = $api->get_current_step($form, $entry);

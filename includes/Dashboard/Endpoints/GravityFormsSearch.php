@@ -54,11 +54,29 @@ class GravityFormsSearch {
 
     /**
      * Check if user has permission to search entries
+     *
+     * @return bool|\WP_Error
      */
-    public function check_permission(): bool {
-        return current_user_can('gravityforms_view_entries') ||
-               current_user_can('dofs.view_dashboard') ||
-               current_user_can('administrator');
+    public function check_permission() {
+        if (!is_user_logged_in()) {
+            return new \WP_Error(
+                'rest_not_logged_in',
+                __('You must be logged in to search entries.', 'dofs-theme'),
+                ['status' => 401]
+            );
+        }
+
+        if (!current_user_can('gravityforms_view_entries') &&
+            !current_user_can('dofs.view_dashboard') &&
+            !current_user_can('sfs_hr.view_dashboard_manager')) {
+            return new \WP_Error(
+                'rest_forbidden',
+                __('You do not have permission to search entries.', 'dofs-theme'),
+                ['status' => 403]
+            );
+        }
+
+        return true;
     }
 
     /**
@@ -96,13 +114,20 @@ class GravityFormsSearch {
             ]);
         }
 
-        // Search entries across forms
+        // Search entries across forms with a cap to prevent memory issues
         $all_results = [];
-        $total_count = 0;
+        $seen_ids = [];
+        $max_results_per_form = min($per_page * 3, 100);
 
         foreach ($forms as $form) {
-            $form_results = $this->search_form_entries($form, $query);
-            $all_results = array_merge($all_results, $form_results);
+            $form_results = $this->search_form_entries($form, $query, $max_results_per_form);
+            foreach ($form_results as $result) {
+                $key = $result['form_id'] . '-' . $result['entry_id'];
+                if (!isset($seen_ids[$key])) {
+                    $seen_ids[$key] = true;
+                    $all_results[] = $result;
+                }
+            }
         }
 
         // Sort by date (most recent first)
@@ -147,7 +172,7 @@ class GravityFormsSearch {
      * @param string $query Search query
      * @return array
      */
-    private function search_form_entries(array $form, string $query): array {
+    private function search_form_entries(array $form, string $query, int $limit = 100): array {
         $form_id = $form['id'];
         $results = [];
 
@@ -183,7 +208,7 @@ class GravityFormsSearch {
         }
 
         // Get entries matching search
-        $entries = \GFAPI::get_entries($form_id, $search_criteria, null, ['offset' => 0, 'page_size' => 200]);
+        $entries = \GFAPI::get_entries($form_id, $search_criteria, null, ['offset' => 0, 'page_size' => $limit]);
 
         if (is_array($entries)) {
             foreach ($entries as $entry) {

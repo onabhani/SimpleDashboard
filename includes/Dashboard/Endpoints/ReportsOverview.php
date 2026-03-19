@@ -33,15 +33,15 @@ class ReportsOverview {
         if (!is_user_logged_in()) {
             return new \WP_Error(
                 'rest_not_logged_in',
-                __('You must be logged in to access this endpoint.', 'simple-hr-suite'),
+                __('You must be logged in to access this endpoint.', 'dofs-theme'),
                 ['status' => 401]
             );
         }
 
-        if (!current_user_can('sfs_hr.view_dashboard_manager')) {
+        if (!current_user_can('dofs.view_dashboard') && !current_user_can('sfs_hr.view_dashboard_manager')) {
             return new \WP_Error(
                 'rest_forbidden',
-                __('You do not have permission to view reports.', 'simple-hr-suite'),
+                __('You do not have permission to view reports.', 'dofs-theme'),
                 ['status' => 403]
             );
         }

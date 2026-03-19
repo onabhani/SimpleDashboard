@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
 /**
  * Generic API fetch hook with loading and error states
@@ -11,13 +11,15 @@ export function useApi(fetchFn, deps = []) {
     const [data, setData] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const fetchFnRef = useRef(fetchFn);
+    fetchFnRef.current = fetchFn;
 
-    const fetch = useCallback(async () => {
+    const doFetch = useCallback(async () => {
         setLoading(true);
         setError(null);
 
         try {
-            const result = await fetchFn();
+            const result = await fetchFnRef.current();
             setData(result);
         } catch (err) {
             console.error('API fetch error:', err);
@@ -25,17 +27,14 @@ export function useApi(fetchFn, deps = []) {
         } finally {
             setLoading(false);
         }
-    }, [fetchFn]);
+    }, []);
 
     useEffect(() => {
-        fetch();
-    }, [...deps, fetch]);
+        doFetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, deps);
 
-    const refetch = useCallback(() => {
-        fetch();
-    }, [fetch]);
-
-    return { data, loading, error, refetch };
+    return { data, loading, error, refetch: doFetch };
 }
 
 export default useApi;
