@@ -33,7 +33,7 @@ class MyHrStatus {
         if (!is_user_logged_in()) {
             return new \WP_Error(
                 'rest_not_logged_in',
-                __('You must be logged in to access this endpoint.', 'simple-hr-suite'),
+                __('You must be logged in to access this endpoint.', 'dofs-theme'),
                 ['status' => 401]
             );
         }
@@ -41,7 +41,7 @@ class MyHrStatus {
         if (!current_user_can('sfs_hr.view_self')) {
             return new \WP_Error(
                 'rest_forbidden',
-                __('You do not have permission to view your HR status.', 'simple-hr-suite'),
+                __('You do not have permission to view your HR status.', 'dofs-theme'),
                 ['status' => 403]
             );
         }

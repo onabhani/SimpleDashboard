@@ -30,8 +30,10 @@ class Shortcode {
     public function render($atts = []): string {
         // Check if user is logged in
         if (!is_user_logged_in()) {
-            wp_redirect(wp_login_url(get_permalink()));
-            exit;
+            return '<div class="dofs-dashboard-login-required" style="padding: 40px; text-align: center;">
+                <h2>' . esc_html__('Login Required', 'dofs-theme') . '</h2>
+                <p><a href="' . esc_url(wp_login_url(get_permalink())) . '">' . esc_html__('Please log in to access the dashboard.', 'dofs-theme') . '</a></p>
+            </div>';
         }
 
         // Check capability (support both new and legacy)
@@ -53,8 +55,8 @@ class Shortcode {
      */
     private function render_no_access(): string {
         return '<div class="dofs-dashboard-no-access" style="padding: 40px; text-align: center;">
-            <h2>' . esc_html__('Access Denied', 'dofs-dashboard') . '</h2>
-            <p>' . esc_html__('You do not have permission to access the dashboard.', 'dofs-dashboard') . '</p>
+            <h2>' . esc_html__('Access Denied', 'dofs-theme') . '</h2>
+            <p>' . esc_html__('You do not have permission to access the dashboard.', 'dofs-theme') . '</p>
         </div>';
     }
 
@@ -68,7 +70,7 @@ class Shortcode {
 
         // Enqueue styles
         wp_enqueue_style(
-            'dofs-dashboard',
+            'dofs-theme',
             $build_url . 'dashboard.css',
             [],
             file_exists($build_path . 'dashboard.css') ? filemtime($build_path . 'dashboard.css') : DOFS_THEME_VERSION
@@ -76,7 +78,7 @@ class Shortcode {
 
         // Enqueue scripts
         wp_enqueue_script(
-            'dofs-dashboard',
+            'dofs-theme',
             $build_url . 'dashboard.js',
             [],
             file_exists($build_path . 'dashboard.js') ? filemtime($build_path . 'dashboard.js') : DOFS_THEME_VERSION,
@@ -91,7 +93,7 @@ class Shortcode {
         $sidebar_menu = $this->get_sidebar_menu();
 
         // Localize script with boot data
-        wp_localize_script('dofs-dashboard', 'SFS_HR_DASHBOARD_BOOT', [
+        wp_localize_script('dofs-theme', 'SFS_HR_DASHBOARD_BOOT', [
             'rest_url' => rest_url('sfs-hr/v1/dashboard/'),
             'nonce' => wp_create_nonce('wp_rest'),
             'user' => [
@@ -135,9 +137,11 @@ class Shortcode {
     private function get_topbar_menu(): array {
         $locations = get_nav_menu_locations();
 
-        // Try new location first, then legacy
+        // Try registered location first, then legacy names
         $location = null;
-        if (isset($locations['dofs_dashboard_top'])) {
+        if (isset($locations['dofs_topbar'])) {
+            $location = 'dofs_topbar';
+        } elseif (isset($locations['dofs_dashboard_top'])) {
             $location = 'dofs_dashboard_top';
         } elseif (isset($locations['sfs_dashboard_top'])) {
             $location = 'sfs_dashboard_top';
@@ -192,9 +196,11 @@ class Shortcode {
     private function get_sidebar_menu(): array {
         $locations = get_nav_menu_locations();
 
-        // Try new location first, then legacy
+        // Try registered location first, then legacy names
         $menu_location = null;
-        if (isset($locations['dofs_dashboard_sidebar'])) {
+        if (isset($locations['dofs_sidebar'])) {
+            $menu_location = 'dofs_sidebar';
+        } elseif (isset($locations['dofs_dashboard_sidebar'])) {
             $menu_location = 'dofs_dashboard_sidebar';
         } elseif (isset($locations['sfs_dashboard_sidebar'])) {
             $menu_location = 'sfs_dashboard_sidebar';

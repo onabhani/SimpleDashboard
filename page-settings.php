@@ -296,11 +296,10 @@ get_sidebar();
                             <select name="timezone" id="timezone" class="w-full rounded-xl border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white focus:ring-primary-500 focus:border-primary-500">
                                 <?php
                                 $timezones = timezone_identifiers_list();
-                                foreach ($timezones as $tz) {
-                                    $selected = $user_settings['timezone'] === $tz ? 'selected' : '';
-                                    echo "<option value=\"{$tz}\" {$selected}>{$tz}</option>";
-                                }
+                                foreach ($timezones as $tz) :
                                 ?>
+                                <option value="<?php echo esc_attr($tz); ?>" <?php selected($user_settings['timezone'], $tz); ?>><?php echo esc_html($tz); ?></option>
+                                <?php endforeach; ?>
                             </select>
                         </div>
                     </div>

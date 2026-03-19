@@ -9,12 +9,85 @@
     document.addEventListener('DOMContentLoaded', function() {
         initSidebar();
         initThemeToggle();
-        initAppLauncher();
-        initNotifications();
-        initUserDropdown();
+        initDropdown('app-launcher-container', 'app-launcher-toggle', 'app-launcher-dropdown');
+        initDropdown('notifications-container', 'notifications-toggle', 'notifications-dropdown');
+        initDropdown('user-dropdown-container', 'user-dropdown-toggle', 'user-dropdown-menu');
         initSearch();
         initMobileSearch();
     });
+
+    /**
+     * Shared HTML escaping utility
+     */
+    function escapeHtml(text) {
+        if (!text) return '';
+        var div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+
+    /**
+     * Shared search API call
+     */
+    function fetchSearchResults(query, callback) {
+        var baseUrl = window.location.origin;
+        var restUrl = '/wp-json/sfs-hr/v1/dashboard/search/entries';
+
+        if (window.dofsTheme && window.dofsTheme.restUrl) {
+            restUrl = window.dofsTheme.restUrl + 'search/entries';
+        }
+
+        var url = baseUrl + restUrl + '?q=' + encodeURIComponent(query);
+
+        var headers = { 'Content-Type': 'application/json' };
+        if (window.dofsTheme && window.dofsTheme.nonce) {
+            headers['X-WP-Nonce'] = window.dofsTheme.nonce;
+        }
+
+        fetch(url, { method: 'GET', headers: headers, credentials: 'same-origin' })
+            .then(function(response) {
+                return response.json().then(function(data) {
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Search failed');
+                    }
+                    return data;
+                });
+            })
+            .then(function(data) { callback(null, data); })
+            .catch(function(error) { callback(error, null); });
+    }
+
+    /**
+     * Generic dropdown initializer (replaces duplicated initAppLauncher/initNotifications/initUserDropdown)
+     */
+    function initDropdown(containerId, toggleId, menuId) {
+        var container = document.getElementById(containerId);
+        var toggleBtn = document.getElementById(toggleId);
+        var menu = document.getElementById(menuId);
+
+        if (!container || !toggleBtn || !menu) return;
+
+        toggleBtn.addEventListener('click', function(e) {
+            e.stopPropagation();
+            var isHidden = menu.classList.contains('hidden');
+            menu.classList.toggle('hidden');
+            toggleBtn.setAttribute('aria-expanded', isHidden ? 'true' : 'false');
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!container.contains(e.target)) {
+                menu.classList.add('hidden');
+                toggleBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                menu.classList.add('hidden');
+                toggleBtn.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
 
     /**
      * Sidebar Toggle (Mobile)
@@ -111,150 +184,6 @@
         window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', function(e) {
             if (!localStorage.getItem('dofs-theme')) {
                 setTheme(e.matches ? 'dark' : 'light');
-            }
-        });
-    }
-
-    /**
-     * App Launcher (Services) Dropdown
-     */
-    function initAppLauncher() {
-        const container = document.getElementById('app-launcher-container');
-        const toggleBtn = document.getElementById('app-launcher-toggle');
-        const dropdown = document.getElementById('app-launcher-dropdown');
-
-        if (!container || !toggleBtn || !dropdown) return;
-
-        function openDropdown() {
-            dropdown.classList.remove('hidden');
-            toggleBtn.setAttribute('aria-expanded', 'true');
-        }
-
-        function closeDropdown() {
-            dropdown.classList.add('hidden');
-            toggleBtn.setAttribute('aria-expanded', 'false');
-        }
-
-        function toggleDropdown() {
-            if (dropdown.classList.contains('hidden')) {
-                openDropdown();
-            } else {
-                closeDropdown();
-            }
-        }
-
-        toggleBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleDropdown();
-        });
-
-        // Close when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!container.contains(e.target)) {
-                closeDropdown();
-            }
-        });
-
-        // Close on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeDropdown();
-            }
-        });
-    }
-
-    /**
-     * Notifications Dropdown
-     */
-    function initNotifications() {
-        const container = document.getElementById('notifications-container');
-        const toggleBtn = document.getElementById('notifications-toggle');
-        const dropdown = document.getElementById('notifications-dropdown');
-
-        if (!container || !toggleBtn || !dropdown) return;
-
-        function openDropdown() {
-            dropdown.classList.remove('hidden');
-            toggleBtn.setAttribute('aria-expanded', 'true');
-        }
-
-        function closeDropdown() {
-            dropdown.classList.add('hidden');
-            toggleBtn.setAttribute('aria-expanded', 'false');
-        }
-
-        function toggleDropdown() {
-            if (dropdown.classList.contains('hidden')) {
-                openDropdown();
-            } else {
-                closeDropdown();
-            }
-        }
-
-        toggleBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleDropdown();
-        });
-
-        // Close when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!container.contains(e.target)) {
-                closeDropdown();
-            }
-        });
-
-        // Close on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeDropdown();
-            }
-        });
-    }
-
-    /**
-     * User Dropdown
-     */
-    function initUserDropdown() {
-        const container = document.getElementById('user-dropdown-container');
-        const toggleBtn = document.getElementById('user-dropdown-toggle');
-        const menu = document.getElementById('user-dropdown-menu');
-
-        if (!container || !toggleBtn || !menu) return;
-
-        function openDropdown() {
-            menu.classList.remove('hidden');
-            toggleBtn.setAttribute('aria-expanded', 'true');
-        }
-
-        function closeDropdown() {
-            menu.classList.add('hidden');
-            toggleBtn.setAttribute('aria-expanded', 'false');
-        }
-
-        function toggleDropdown() {
-            if (menu.classList.contains('hidden')) {
-                openDropdown();
-            } else {
-                closeDropdown();
-            }
-        }
-
-        toggleBtn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            toggleDropdown();
-        });
-
-        // Close when clicking outside
-        document.addEventListener('click', function(e) {
-            if (!container.contains(e.target)) {
-                closeDropdown();
-            }
-        });
-
-        // Close on escape key
-        document.addEventListener('keydown', function(e) {
-            if (e.key === 'Escape') {
-                closeDropdown();
             }
         });
     }
@@ -375,59 +304,28 @@
         function performSearch(query) {
             showLoading();
 
-            // Build the API URL
-            var baseUrl = window.location.origin;
-            var restUrl = '/wp-json/sfs-hr/v1/dashboard/search/entries';
-
-            if (window.dofsTheme && window.dofsTheme.restUrl) {
-                restUrl = window.dofsTheme.restUrl + 'search/entries';
-            }
-
-            var url = baseUrl + restUrl + '?q=' + encodeURIComponent(query);
-
-            var headers = {
-                'Content-Type': 'application/json'
-            };
-
-            if (window.dofsTheme && window.dofsTheme.nonce) {
-                headers['X-WP-Nonce'] = window.dofsTheme.nonce;
-            }
-
-            fetch(url, {
-                method: 'GET',
-                headers: headers,
-                credentials: 'same-origin'
-            })
-            .then(function(response) {
-                return response.json().then(function(data) {
-                    if (!response.ok) {
-                        throw new Error(data.message || 'Search failed');
-                    }
-                    return data;
-                });
-            })
-            .then(function(data) {
+            fetchSearchResults(query, function(error, data) {
                 hideLoading();
 
-                if (query !== currentQuery) return; // Query changed while fetching
+                if (error) {
+                    console.error('Search error:', error);
+                    renderErrorMessage(error.message || 'Search failed. Please try again.');
+                    showResults();
+                    return;
+                }
+
+                if (query !== currentQuery) return;
 
                 if (data.results && data.results.length > 0) {
                     renderResults(data.results, data.total);
                     showResults();
                 } else if (data.code) {
-                    // API returned an error
                     renderErrorMessage(data.message || 'Search error');
                     showResults();
                 } else {
                     renderNoResults(query);
                     showResults();
                 }
-            })
-            .catch(function(error) {
-                hideLoading();
-                console.error('Search error:', error);
-                renderErrorMessage(error.message || 'Search failed. Please try again.');
-                showResults();
             });
         }
 
@@ -466,13 +364,6 @@
             searchResultsList.innerHTML = '<div class="px-4 py-8 text-center">' +
                 '<p class="text-sm text-red-500 dark:text-red-400">' + escapeHtml(message) + '</p>' +
                 '</div>';
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
         }
 
         function formatDate(dateStr) {
@@ -562,48 +453,23 @@
         });
 
         function performMobileSearch(query) {
-            var baseUrl = window.location.origin;
-            var restUrl = '/wp-json/sfs-hr/v1/dashboard/search/entries';
+            fetchSearchResults(query, function(error, data) {
+                if (error) {
+                    console.error('Mobile search error:', error);
+                    renderMobileError(error.message || 'Search failed. Please try again.');
+                    if (searchResults) searchResults.classList.remove('hidden');
+                    return;
+                }
 
-            if (window.dofsTheme && window.dofsTheme.restUrl) {
-                restUrl = window.dofsTheme.restUrl + 'search/entries';
-            }
-
-            var url = baseUrl + restUrl + '?q=' + encodeURIComponent(query);
-
-            var headers = {
-                'Content-Type': 'application/json'
-            };
-
-            if (window.dofsTheme && window.dofsTheme.nonce) {
-                headers['X-WP-Nonce'] = window.dofsTheme.nonce;
-            }
-
-            fetch(url, {
-                method: 'GET',
-                headers: headers,
-                credentials: 'same-origin'
-            })
-            .then(function(response) {
-                return response.json();
-            })
-            .then(function(data) {
                 if (query !== currentQuery) return;
 
                 if (data.results && data.results.length > 0) {
                     renderMobileResults(data.results, data.total);
-                    if (searchResults) searchResults.classList.remove('hidden');
                 } else if (data.code) {
                     renderMobileError(data.message || 'Search error');
-                    if (searchResults) searchResults.classList.remove('hidden');
                 } else {
                     renderMobileNoResults(query);
-                    if (searchResults) searchResults.classList.remove('hidden');
                 }
-            })
-            .catch(function(error) {
-                console.error('Mobile search error:', error);
-                renderMobileError('Search failed. Please try again.');
                 if (searchResults) searchResults.classList.remove('hidden');
             });
         }
@@ -646,13 +512,6 @@
             searchResultsList.innerHTML = '<div class="px-4 py-8 text-center">' +
                 '<p class="text-sm text-red-500 dark:text-red-400">' + escapeHtml(message) + '</p>' +
                 '</div>';
-        }
-
-        function escapeHtml(text) {
-            if (!text) return '';
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
         }
     }
 

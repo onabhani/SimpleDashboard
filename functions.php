@@ -104,9 +104,7 @@ function dofs_get_current_user_data(): array {
     return [
         'id' => $user->ID,
         'name' => $user->display_name,
-        'email' => $user->user_email,
         'avatar' => get_avatar_url($user->ID, ['size' => 96]),
-        'roles' => $user->roles,
     ];
 }
 
@@ -356,7 +354,7 @@ add_filter('body_class', 'dofs_body_classes');
  */
 function dofs_get_current_section(): ?array {
     $sections = dofs_get_section_definitions();
-    $current_url = trailingslashit($_SERVER['REQUEST_URI']);
+    $current_url = trailingslashit(sanitize_url($_SERVER['REQUEST_URI']));
 
     foreach ($sections as $slug => $section) {
         $section_path = '/' . $slug . '/';
@@ -527,7 +525,7 @@ function dofs_render_subnav(): void {
         return;
     }
 
-    $current_url = trailingslashit($_SERVER['REQUEST_URI']);
+    $current_url = trailingslashit(sanitize_url($_SERVER['REQUEST_URI']));
     ?>
     <nav class="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-4 lg:px-6">
         <div class="flex items-center gap-1 overflow-x-auto scrollbar-hide -mb-px">
